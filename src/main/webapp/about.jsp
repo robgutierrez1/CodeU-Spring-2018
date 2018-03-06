@@ -16,13 +16,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CodeU Chat App</title>
+  <title>BitsNBytes' CodeU Chat App</title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
   <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
+    <a id="navTitle" href="/">BitsNBytes' CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
       <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -64,6 +64,28 @@
         This page should also be used to describe the features and improvements
         you've added.
       </p>
+    </div>
+  </div>
+
+  <%-- About Us --%>
+  <div id="containter">
+    <div
+      style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
+
+      <h1>About the Development Team</h1>
+      <h3>Artur Tsurkan-PA</h3>
+      <p>Product Manager on the Android/Pixel software team</p>
+      <h3>Robert C. Gutierrez</h3>
+      <p>Sophomore majoring in Computer Science at The University of Texas at
+      Austin</p>
+      <h3>Zene Sekou</h3>
+      <p>Sophomore majoring in Computer Science at The University of Chicago
+      as well as minoring in Linguistics</p>
+      <h3>Rosa Zhou</h3>
+      <p>Sophomore majoring in Computer Science and Math at Carleton College</p>
+      <h3>Peter Yang</h3>
+      <p>Junior majoring in Computer Engineering and Computer Science at The
+      University of Winsconsin-Madison</p>
     </div>
   </div>
 </body>
