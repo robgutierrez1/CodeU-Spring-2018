@@ -24,6 +24,11 @@
 
       <div id="container">
         <h1>Register</h1>
+        <!-- Username or Password not valid! -->
+        <% if(request.getAttribute("error") != null){ %>
+          <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+        <% } %>
+
         <!-- Renders the username and password boxes as well as the submit
         button -->
         <form action="/register" method="POST">
