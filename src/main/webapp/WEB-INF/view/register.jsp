@@ -12,15 +12,7 @@
     </head>
     <body>
 
-      <nav>
-        <a id="navTitle" href="/">BitsNBytes' CodeU Chat App</a>
-        <a href="/conversations">Conversations</a>
-        <% if(request.getSession().getAttribute("user") != null) { %>
-          <a>Hello <%= request.getSession().getAttribute("user") %>!</a><%
-        } else { %>
-            <a href="/login">Login</a>
-          <% } %>
-      </nav>
+      <%@ include file="/navbar.html" %>
 
       <div id="container">
         <h1>Register</h1>
