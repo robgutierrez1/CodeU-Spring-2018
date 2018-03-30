@@ -15,6 +15,7 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%
 User user = (User) request.getAttribute("user");
+User viewer = (User) request.getAttribute("viewer");
 %>
 
 <!DOCTYPE html>
@@ -42,7 +43,13 @@ User user = (User) request.getAttribute("user");
 
       <p>Something about me</p>
       <div id="about">
+          
           <img src="http://jconlineimagem.ne10.uol.com.br/imagem/noticia/2017/08/25/normal/5189d69f07b630e3b36dc60922eeddb4.jpg">
+          <% if (user.equals(viewer)) { %>
+            <button type="submit">Edit</button>
+            <% } else { %>
+              <!-- nothing -->
+            <% } %>
       </div>
     </div>
   </div>

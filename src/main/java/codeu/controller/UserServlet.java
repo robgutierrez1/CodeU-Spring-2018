@@ -52,8 +52,8 @@ public class UserServlet extends HttpServlet {
   }
 
   /**
-   * This function fires when a user navigates to the conversations page. It gets all of the
-   * conversations from the model and forwards to conversations.jsp for rendering the list.
+   * This function fires when a user navigates to the user page. It checks whether the username
+   * exist in the database and forwards to conversations.jsp for rendering the list.
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -70,13 +70,16 @@ public class UserServlet extends HttpServlet {
       return;
     }
 
+    String viewerName = (String) request.getSession().getAttribute("user");
+    User viewer = userStore.getUser(viewerName);
 	request.setAttribute("user", user);
+	request.setAttribute("viewer", viewer);
 	  
     request.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(request, response);
   }
 
   /**
-   * This function fires when a user submits the form on the conversations page. It gets the
+   * This function fires when a user submits a change in the about me section. It gets the
    * logged-in username from the session and the new conversation title from the submitted form
    * data. It uses this to create a new Conversation object that it adds to the model.
    */
