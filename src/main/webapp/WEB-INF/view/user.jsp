@@ -16,6 +16,7 @@
 <%
 User user = (User) request.getAttribute("user");
 User viewer = (User) request.getAttribute("viewer");
+Boolean editAboutMe = (Boolean) request.getAttribute("editAboutMe");
 %>
 
 <!DOCTYPE html>
@@ -25,8 +26,8 @@ User viewer = (User) request.getAttribute("viewer");
   <link rel="stylesheet" href="/css/main.css" type="text/css">
   <style>
     #about {
-      background-color: white;
-      height: 150px;
+      /*height: 150px;
+      width: 250px;*/
     }
   </style>
 
@@ -39,14 +40,22 @@ User viewer = (User) request.getAttribute("viewer");
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
       <h1><%= user.getName() %></h1>
-      <h2>This is my profile :) </h2>
+      <h2>My profile :) </h2>
 
-      <p>Something about me</p>
-      <div id="about">
-          
-          <img src="http://jconlineimagem.ne10.uol.com.br/imagem/noticia/2017/08/25/normal/5189d69f07b630e3b36dc60922eeddb4.jpg">
+      <div >
+          <p><%= user.getAboutMe() %></p>
           <% if (user.equals(viewer)) { %>
-            <button type="submit">Edit</button>
+              <form action="/user/<%= user.getName() %>" method="POST">
+                <br/>
+                <% if (!editAboutMe) { %>
+                    <button type="submit" name = "buttonVal" value = "edit">Edit</button>
+                <% } else { %>
+                    <textarea rows="4" cols="50" placeholder="Please enter your new About Me."></textarea>
+                    <br/>
+                    <button type="submit" name = "buttonVal" value = "cancel">Cancel</button>
+                    <button type="submit" name = "buttonVal" value = "submit">Submit</button>
+                <% } %>
+            </form>
             <% } else { %>
               <!-- nothing -->
             <% } %>

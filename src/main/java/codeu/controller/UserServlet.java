@@ -32,6 +32,9 @@ public class UserServlet extends HttpServlet {
 
   /** Store class that gives access to Users. */
   private UserStore userStore;
+  
+  /** Checks whether the user is editing about me*/
+  private Boolean editAboutMe = false;
 
   /**
    * Set up state for handling user-related requests. This method is only called when
@@ -74,6 +77,7 @@ public class UserServlet extends HttpServlet {
     User viewer = userStore.getUser(viewerName);
 	request.setAttribute("user", user);
 	request.setAttribute("viewer", viewer);
+	request.setAttribute("editAboutMe", editAboutMe);
 	  
     request.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(request, response);
   }
@@ -87,7 +91,26 @@ public class UserServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 	  
-	  // do nothing for now
+	String requestUrl = request.getRequestURI();
+	String userTitle = requestUrl.substring("/user/".length());
+	
+	String buttonVal = request.getParameter("buttonVal");
+	
+	if (buttonVal.equals("edit")) {
+		editAboutMe = true;
+		System.out.println("Edit!");
+	} else if (buttonVal.equals("cancel")) {
+		editAboutMe = false;
+		System.out.println("Cancel!");
+	} else if (buttonVal.equals("submit")){
+		editAboutMe = false; // finish editing
+		System.out.println("Submit!");
+	} else {
+		// default case: shouldn't reach here
+		System.out.println("Something went wrong...");
+	}
+	  
+	response.sendRedirect("/user/" + userTitle);
   }
 }
 
