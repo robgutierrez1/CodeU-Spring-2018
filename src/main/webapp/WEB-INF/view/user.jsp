@@ -25,7 +25,7 @@ User user = (User) request.getAttribute("user");
 
 </head>
 <body>
-
+  <%@ include file="/navbar.html" %>
   
 
 </body>
