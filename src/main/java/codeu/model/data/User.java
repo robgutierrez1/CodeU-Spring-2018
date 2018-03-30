@@ -23,6 +23,7 @@ public class User {
   private final String name;
   private final String password;
   private final Instant creation;
+  private String aboutMe;
 
   /**
    * Constructs a new User.
@@ -37,6 +38,9 @@ public class User {
     this.name = name;
     this.password = password;
     this.creation = creation;
+    
+    // added aboutMe
+    aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
   }
 
   /** Returns the ID of this User. */
@@ -59,5 +63,17 @@ public class User {
   /** Returns the creation time of this User. */
   public Instant getCreationTime() {
     return creation;
+  }
+  
+  /** Returns the aboutMe of this User. */
+  public String getAboutMe() {
+    return aboutMe;
+  }
+
+  /**
+   * Sets the aboutMe of this User.
+   */
+  public void setAboutMe(String aboutMe) {
+    this.aboutMe = aboutMe;
   }
 }
