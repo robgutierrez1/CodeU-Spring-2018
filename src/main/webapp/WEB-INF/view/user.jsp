@@ -17,6 +17,7 @@
 User user = (User) request.getAttribute("user");
 User viewer = (User) request.getAttribute("viewer");
 Boolean editAboutMe = (Boolean) request.getAttribute("editAboutMe");
+Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
 %>
 
 <!DOCTYPE html>
@@ -50,7 +51,7 @@ Boolean editAboutMe = (Boolean) request.getAttribute("editAboutMe");
                 <% if (!editAboutMe) { %>
                     <button type="submit" name = "buttonVal" value = "edit">Edit</button>
                 <% } else { %>
-                    <textarea rows="4" cols="50" placeholder="Please enter your new About Me."></textarea>
+                    <textarea name = "enteredAboutMe" rows="4" cols="50" placeholder="Please enter your new About Me."></textarea>
                     <br/>
                     <button type="submit" name = "buttonVal" value = "cancel">Cancel</button>
                     <button type="submit" name = "buttonVal" value = "submit">Submit</button>

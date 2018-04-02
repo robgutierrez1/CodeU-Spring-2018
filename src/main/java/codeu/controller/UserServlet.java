@@ -95,6 +95,7 @@ public class UserServlet extends HttpServlet {
 	String userTitle = requestUrl.substring("/user/".length());
 	
 	String buttonVal = request.getParameter("buttonVal");
+    String enteredAboutMe = request.getParameter("enteredAboutMe");
 	
 	if (buttonVal.equals("edit")) {
 		editAboutMe = true;
@@ -104,6 +105,9 @@ public class UserServlet extends HttpServlet {
 		System.out.println("Cancel!");
 	} else if (buttonVal.equals("submit")){
 		editAboutMe = false; // finish editing
+        User user = userStore.getUser(userTitle);
+        user.setAboutMe(enteredAboutMe);
+        System.out.println("entered is: " + enteredAboutMe);
 		System.out.println("Submit!");
 	} else {
 		// default case: shouldn't reach here
