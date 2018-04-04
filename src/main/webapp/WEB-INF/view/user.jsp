@@ -40,10 +40,10 @@ Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
-      <h1><%= user.getName() %></h1>
+      <h1><%= user.getName() %>'s Profile Page</h1>
       <h2>My profile :) </h2>
 
-      <div >
+      <div>
           <p><%= user.getAboutMe() %></p>
           <% if (user.equals(viewer)) { %>
               <form action="/user/<%= user.getName() %>" method="POST">
@@ -60,6 +60,12 @@ Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
             <% } else { %>
               <!-- nothing -->
             <% } %>
+      </div>
+      
+      <h2>Past conversations: </h2>
+      <div 
+        style="overflow: auto; height: 300px; background-color: white">
+      	Time: content
       </div>
     </div>
   </div>
