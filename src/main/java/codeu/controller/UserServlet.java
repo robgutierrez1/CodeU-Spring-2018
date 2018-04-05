@@ -18,8 +18,11 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
@@ -33,17 +36,25 @@ public class UserServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
   
+  /** Store class that gives access to Conversations. */
+  private ConversationStore conversationStore;
+  
+  /** Store class that gives access to Messages. */
+  private MessageStore messageStore;
+  
   /** Checks whether the user is editing about me*/
   private Boolean editAboutMe = false;
 
   /**
-   * Set up state for handling user-related requests. This method is only called when
-   * running in a server, not when running in a test.
+   * Set up state for handling user-related and conversation-related requests. This method 
+   * is only called when running in a server, not when running in a test.
    */
   @Override
   public void init() throws ServletException {
     super.init();
     setUserStore(UserStore.getInstance());
+    setConversationStore(ConversationStore.getInstance());
+    setMessageStore(MessageStore.getInstance());
   }
 
   /**
@@ -53,7 +64,39 @@ public class UserServlet extends HttpServlet {
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
   }
-
+  
+  /**
+   * Sets the ConversationStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setConversationStore(ConversationStore conversationStore) {
+    this.conversationStore = conversationStore;
+  }
+  
+  /**
+   * Sets the MessageStore used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
+   */
+  void setMessageStore(MessageStore messageStore) {
+    this.messageStore = messageStore;
+  }
+  
+  /**
+   * Gets the list conversation of a particular user
+   */
+   List getUserConversations(User user) {
+     UUID userId = user.getId();
+     List<Conversation> allConversations = conversationStore.getAllConversations();
+     List<Conversation> userConversations = new ArrayList<Conversation>();   
+     for (Conversation conversation: allConversations) {
+       UUID conversationOwnerId = conversation.getOwnerId();
+       if (conversationOwnerId == userId) {
+         userConversations.add(conversation);
+       }
+     }
+     return userConversations;
+   }
+    
   /**
    * This function fires when a user navigates to the user page. It checks whether the username
    * exist in the database and forwards to conversations.jsp for rendering the list.
@@ -78,7 +121,15 @@ public class UserServlet extends HttpServlet {
 	request.setAttribute("user", user);
 	request.setAttribute("viewer", viewer);
 	request.setAttribute("editAboutMe", editAboutMe);
-	  
+	
+	List<Conversation> userConversations = getUserConversations(user);
+	List<Message> userMessages = new ArrayList<Message>();
+	for (Conversation conversation: userConversations) {
+	  List<Message> messages = messageStore.getMessagesInConversation(conversation.getId());
+	  userMessages.addAll(messages);
+	}
+	request.setAttribute("messages", userMessages);
+	
     request.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(request, response);
   }
 

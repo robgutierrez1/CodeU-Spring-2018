@@ -13,11 +13,14 @@
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.data.Message" %>
 <%
 User user = (User) request.getAttribute("user");
 User viewer = (User) request.getAttribute("viewer");
 Boolean editAboutMe = (Boolean) request.getAttribute("editAboutMe");
 Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
+List<Message> userMessages = (List<Message>) request.getAttribute("messages");
 %>
 
 <!DOCTYPE html>
@@ -51,7 +54,8 @@ Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
                 <% if (!editAboutMe) { %>
                     <button type="submit" name = "buttonVal" value = "edit">Edit</button>
                 <% } else { %>
-                    <textarea name = "enteredAboutMe" rows="4" cols="50" placeholder="Please enter your new About Me."></textarea>
+                    <textarea name = "enteredAboutMe" rows="4" cols="50" 
+                    placeholder="Please enter your new About Me."></textarea>
                     <br/>
                     <button type="submit" name = "buttonVal" value = "cancel">Cancel</button>
                     <button type="submit" name = "buttonVal" value = "submit">Submit</button>
@@ -62,10 +66,17 @@ Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
             <% } %>
       </div>
       
-      <h2>Past conversations: </h2>
-      <div 
-        style="overflow: auto; height: 300px; background-color: white">
-      	Time: content
+      <h2>Past messages: </h2>
+      <div
+      style="overflow: auto; height: 300px; background-color: white;">
+
+      <% for (Message message: userMessages) { %>
+        <ul 
+        style="margin: 10px;">
+        	<li><b><%= message.getCreationTime()%></b> : <%= message.getContent() %></li>
+        </ul>
+        <% } %>
+        
       </div>
     </div>
   </div>
