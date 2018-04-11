@@ -42,6 +42,23 @@ public class User {
     // added aboutMe
     this.aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
   }
+    
+  /**
+   * Constructs a new User.
+   *
+   * @param id the ID of this User
+   * @param name the username of this User
+   * @param password the password of this User
+   * @param creation the creation time of this User
+   * @param aboutMe the about me/bio of this User
+   */
+   public User(UUID id, String name, String password, Instant creation, String aboutMe) {
+     this.id = id;
+     this.name = name;
+     this.password = password;
+     this.creation = creation;
+     this.aboutMe = aboutMe;
+   }
 
   /** Returns the ID of this User. */
   public UUID getId() {

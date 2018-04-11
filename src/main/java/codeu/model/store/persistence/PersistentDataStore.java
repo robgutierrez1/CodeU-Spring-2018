@@ -67,7 +67,7 @@ public class PersistentDataStore {
         String password = (String) entity.getProperty("password");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String aboutMe = (String) entity.getProperty("aboutme");
-        User user = new User(uuid, userName, password, creationTime);
+        User user = new User(uuid, userName, password, creationTime, aboutMe);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -166,7 +166,6 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         if (uuid.equals(user.getId())) {
-          System.out.println("updating about me!! to be: " + aboutMe);
           entity.removeProperty("aboutme");
           entity.setProperty("aboutme", aboutMe);
           datastore.put(entity);

@@ -123,7 +123,6 @@ public class UserServlet extends HttpServlet {
 	request.setAttribute("viewer", viewer);
 	request.setAttribute("editAboutMe", editAboutMe);
     request.setAttribute("aboutMe", aboutMe);
-    System.out.println("In doGet, aboutMe is:" + aboutMe);
 	
 	List<Conversation> userConversations = getUserConversations(user);
 	List<Message> userMessages = new ArrayList<Message>();
@@ -169,7 +168,6 @@ public class UserServlet extends HttpServlet {
 		editAboutMe = false; // finish editing
         user.setAboutMe(enteredAboutMe);
         userStore.updateAboutMe(user, enteredAboutMe);
-        System.out.println("entered is: " + enteredAboutMe);
 		System.out.println("Submit!");
 	} else {
 		// default case: shouldn't reach here
