@@ -90,7 +90,7 @@ public class UserServlet extends HttpServlet {
      List<Conversation> userConversations = new ArrayList<Conversation>();   
      for (Conversation conversation: allConversations) {
        UUID conversationOwnerId = conversation.getOwnerId();
-       if (conversationOwnerId == userId) {
+       if (conversationOwnerId.equals(userId)) {
          userConversations.add(conversation);
        }
      }
@@ -118,9 +118,12 @@ public class UserServlet extends HttpServlet {
 
     String viewerName = (String) request.getSession().getAttribute("user");
     User viewer = userStore.getUser(viewerName);
+    String aboutMe = user.getAboutMe();
 	request.setAttribute("user", user);
 	request.setAttribute("viewer", viewer);
 	request.setAttribute("editAboutMe", editAboutMe);
+    request.setAttribute("aboutMe", aboutMe);
+    System.out.println("In doGet, aboutMe is:" + aboutMe);
 	
 	List<Conversation> userConversations = getUserConversations(user);
 	List<Message> userMessages = new ArrayList<Message>();
@@ -140,7 +143,7 @@ public class UserServlet extends HttpServlet {
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+      throws IOException, ServletException{
 	  
 	String requestUrl = request.getRequestURI();
 	String userTitle = requestUrl.substring("/user/".length());
@@ -158,6 +161,7 @@ public class UserServlet extends HttpServlet {
 		editAboutMe = false; // finish editing
         User user = userStore.getUser(userTitle);
         user.setAboutMe(enteredAboutMe);
+        //userStore.updateAboutMe(user, enteredAboutMe);
         System.out.println("entered is: " + enteredAboutMe);
 		System.out.println("Submit!");
 	} else {

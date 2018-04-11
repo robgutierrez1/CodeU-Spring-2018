@@ -40,7 +40,7 @@ public class User {
     this.creation = creation;
     
     // added aboutMe
-    aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
+    this.aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
   }
 
   /** Returns the ID of this User. */

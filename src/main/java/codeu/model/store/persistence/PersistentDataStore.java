@@ -64,8 +64,9 @@ public class PersistentDataStore {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         String userName = (String) entity.getProperty("username");
-        String password = (String)entity.getProperty("password");
+        String password = (String) entity.getProperty("password");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        //String aboutMe = (String) entity.getProperty("aboutme");
         User user = new User(uuid, userName, password, creationTime);
         users.add(user);
       } catch (Exception e) {
@@ -153,8 +154,23 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    //userEntity.setProperty("aboutme", user.getAboutMe().toString());
     datastore.put(userEntity);
   }
+    
+  /** Update a User object's aboutme to the Datastore service.
+  public void updateAboutMe(User user, String aboutMe) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+      
+    for (Entity entity : results.asIterable()) {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        if (uuid.equals(user.getId())) {
+          entity.setProperty("aboutme", aboutMe);
+          datastore.put(entity);
+        }
+    }
+  }*/
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {
