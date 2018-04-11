@@ -104,10 +104,10 @@ public class UserStore {
     persistentStorageAgent.writeThrough(user);
   }
 
-  /** Add a new user to the current set of users known to the application.
+  /** Add a new user to the current set of users known to the application.*/
   public void updateAboutMe(User user, String aboutMe) {
     persistentStorageAgent.updateAboutMe(user, aboutMe);
-  }*/
+  }
     
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {

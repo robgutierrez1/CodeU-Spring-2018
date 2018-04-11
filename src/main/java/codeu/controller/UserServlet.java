@@ -147,6 +147,14 @@ public class UserServlet extends HttpServlet {
 	  
 	String requestUrl = request.getRequestURI();
 	String userTitle = requestUrl.substring("/user/".length());
+          
+    User user = userStore.getUser(userTitle);
+    if (user == null) {
+      // couldn't find user, redirect to home page (for now)
+      System.out.println("Name was null: " + userTitle);
+      response.sendRedirect("/");
+      return;
+    }
 	
 	String buttonVal = request.getParameter("buttonVal");
     String enteredAboutMe = request.getParameter("enteredAboutMe");
@@ -159,9 +167,8 @@ public class UserServlet extends HttpServlet {
 		System.out.println("Cancel!");
 	} else if (buttonVal.equals("submit")){
 		editAboutMe = false; // finish editing
-        User user = userStore.getUser(userTitle);
         user.setAboutMe(enteredAboutMe);
-        //userStore.updateAboutMe(user, enteredAboutMe);
+        userStore.updateAboutMe(user, enteredAboutMe);
         System.out.println("entered is: " + enteredAboutMe);
 		System.out.println("Submit!");
 	} else {
