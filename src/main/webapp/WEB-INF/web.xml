@@ -66,6 +66,16 @@
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
 
+<servlet>
+    <servlet-name>ActivityServlet</servlet-name>
+    <servlet-class>codeu.controller.ActivityServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ActivityServlet</servlet-name>
+    <url-pattern>/activity</url-pattern>
+  </servlet-mapping>
+
   <servlet>
     <servlet-name>TestDataServlet</servlet-name>
     <servlet-class>codeu.controller.TestDataServlet</servlet-class>
