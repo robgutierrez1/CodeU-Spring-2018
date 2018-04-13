@@ -44,51 +44,68 @@ public class ActivityStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of new Users. */
-  private Queue<User> new_users;
+  private List<User> new_users;
 
   // The in-memory list of new Conversations
-  private Queue<Conversation> new_convos;
+  private List<Conversation> new_convos;
 
   // The in-memory list of new messages
-  private Queue<Message> new_messages;
+  private List<Message> new_messages;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ActivityStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     // Initialize a queue that holds new users. FIFO implementation.
-    new_users = new LinkedList<User>();
-    new_convos = new LinkedList<Conversation>();
-    new_messages = new LinkedList<Messages>();
+    newUers = new ArrayList<>();
+    newConversations = new ArrayList<>();
+    newMessages = new ArrayList<>();
   }
 
   /** Add a new user to the queue */
   public void addUser(User user) {
-    new_users.add(user);
+    newUsers.add(user);
     // Not sure about adding to persistentStorageAgent
     // persistentStorageAgent.writeThrough(user);
   }
 
-  /** Get the next new user to display */
-  public User getUser() {
-    return new_users.remove();
+  /** Access the current set of new users known to the application. */
+  public List<User> getAllUsers() {
+    return newUsers;
   }
 
+   /** Access the current set of new users known to the application. */
+  public List<Conversation> getAllConversations() {
+    return newConversations;
+  }
+
+   /** Access the current set of new users known to the application. */
+  public List<Message> getAllMessages() {
+    return newMessages;
+  }
+
+
+  /** Get the next new user to display 
+  public User getUser() {
+    return new_users.remove();
+  }*/
+
   // Add a new conversation to the queue
-  public void addConvo(Conversation convo) {
-    new_convos.add(convo);
+  public void addConvo(Conversation conversation) {
+    newConvos.add(conversation);
   }
 
   // Get the next new conversation to display
-  public Conversation getConvo() {
+  /*public Conversation getConvo() {
     return new_convos.remove();
-  }
+  }*/
 
   // Add a new message to the queue
-  public void addMessage(Message mess) {
-    new_messages.add(mess);
+  public void addMessage(Message message) {
+    newMessages.add(message);
   }
 
   // Get a new message from the queue
-  public Message getMess() {
+  /*public Message getMess() {
     return new_message.remove();
-  }
+  }*/
+}
