@@ -44,19 +44,19 @@ public class ActivityStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of new Users. */
-  private List<User> new_users;
+  private List<User> newUsers;
 
   // The in-memory list of new Conversations
-  private List<Conversation> new_convos;
+  private List<Conversation> newConversations;
 
   // The in-memory list of new messages
-  private List<Message> new_messages;
+  private List<Message> newMessages;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ActivityStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     // Initialize a queue that holds new users. FIFO implementation.
-    newUers = new ArrayList<>();
+    newUsers = new ArrayList<>();
     newConversations = new ArrayList<>();
     newMessages = new ArrayList<>();
   }
@@ -91,7 +91,7 @@ public class ActivityStore {
 
   // Add a new conversation to the queue
   public void addConvo(Conversation conversation) {
-    newConvos.add(conversation);
+    newConversations.add(conversation);
   }
 
   // Get the next new conversation to display
@@ -108,4 +108,9 @@ public class ActivityStore {
   /*public Message getMess() {
     return new_message.remove();
   }*/
+
+  /** Sets the List of Conversations stored by this ConversationStore. */
+  public void setConversations(List<Conversation> conversations) {
+    this.newConversations = conversations;
+  }
 }

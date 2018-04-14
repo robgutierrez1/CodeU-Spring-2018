@@ -22,6 +22,8 @@ public class ActivityServlet extends HttpServlet {
 	/** Store class that gives access to Activities. */
  	private ActivityStore activityStore;
 
+  private ConversationStore conversationStore;
+
 
   /**
     * Set up state for handling activity-related requests. This method is only
@@ -49,10 +51,10 @@ public class ActivityServlet extends HttpServlet {
   @Override 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-        List<User> users = activityStore.getAllUsers();
+        //List<User> users = activityStore.getAllUsers();
         List<Conversation> conversations = activityStore.getAllConversations();
-        List<Message> messages = activityStore.getAllMessages();
-        request.setAttribute("users", users);
+        //List<Message> messages = activityStore.getAllMessages();
+        request.setAttribute("conversations", conversations);
         request.getRequestDispatcher("/WEB-INF/view/activity.jsp").forward(request, response);
     }
 

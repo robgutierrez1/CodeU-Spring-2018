@@ -26,9 +26,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+
 
 /** Servlet class responsible for the conversations page. */
 public class ConversationServlet extends HttpServlet {
+
+
 
   /** Store class that gives access to Users. */
   private UserStore userStore;
@@ -71,6 +76,8 @@ public class ConversationServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     List<Conversation> conversations = conversationStore.getAllConversations();
+    //HttpSession session = request.getSession();
+    //session.setAttribute("conversations", conversations);
     request.setAttribute("conversations", conversations);
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }

@@ -1,3 +1,6 @@
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.data.Conversation" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,6 +28,22 @@
       <h1>CodeU Chat App</h1>
       <h2>Welcome!</h2>
     </div>
+    <%
+    List<Conversation> conversations =
+      (List<Conversation>) request.getAttribute("conversations");
+    %>
+      <ul class="mdl-list">
+    <%
+      for(Conversation conversation : conversations){
+    %>
+      <li><a href="/chat/<%= conversation.getTitle() %>">
+        <%= conversation.getTitle() %></a></li>
+    <%
+    %>
+      </ul>
+    <%
+    }
+    %>
   </div>
 </body>
 </html>
