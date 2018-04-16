@@ -3,6 +3,8 @@
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="java.util.UUID" %>
 
 <!-- Get the necessary data that is going to be displayed on activity feed -->
 <%
@@ -50,8 +52,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
             for(Message message: messages) {
                 String author = UserStore.getInstance()
                 .getUser(message.getAuthorId()).getName();
+                String date = message.getDate(message.getCreationTime());
         %>  
-            <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+            <li><strong><%= date %>: </strong><%= author %>: "<%= message.getContent() %>"</li>
         <%
             }
         %>
