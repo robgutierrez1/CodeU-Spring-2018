@@ -121,4 +121,9 @@ public class UserStore {
   public void setUsers(List<User> users) {
     this.users = users;
   }
+
+  /** Added. Return list of all users. Used in Activity Feed */
+  public List<User> getAllUsers() {
+    return users;
+  }
 }

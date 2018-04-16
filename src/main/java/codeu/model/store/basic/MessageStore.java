@@ -106,4 +106,9 @@ public class MessageStore {
   public void setMessages(List<Message> messages) {
     this.messages = messages;
   }
+
+  /** Added. Return list of all messages. Used in activity feed */
+  public List<Message> getAllMessages() {
+    return messages;
+  }
 }
