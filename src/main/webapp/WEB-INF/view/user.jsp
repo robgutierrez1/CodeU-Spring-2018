@@ -70,12 +70,29 @@ List<Message> userMessages = (List<Message>) request.getAttribute("messages");
       <div
       style="overflow: auto; height: 300px; background-color: white;">
 
-      <% for (Message message: userMessages) { %>
-        <ul 
-        style="margin: 10px;">
-        	<li><b><%= message.getCreationTime()%></b> : <%= message.getContent() %></li>
-        </ul>
-        <% } %>
+      <% int i = 0; 
+         for (Message message: userMessages) { 
+            if (message.getOpenToPublic()){%>
+                <ul style="margin: 10px;">
+                    <li><b><%= message.getCreationTime()%></b> : <%= message.getContent() %>
+                <% if (user.equals(viewer)) { %>
+                        <form action="/user/<%= user.getName() %>" method="POST">
+                        <button type="submit" name = "buttonVal" value = "hide<%=i%>">Hide</button>
+                <% } %></li>
+                </ul>
+        <% } else {%>
+                <ul style="margin: 10px;">
+                    <%if (user.equals(viewer)) { %>
+                        <form action="/user/<%= user.getName() %>" method="POST">
+                        <li><button type="submit" name = "buttonVal" value = "show<%=i%>">show the hidden message</button></li>
+                <% }%> 
+                </ul>
+         <% }
+           
+           
+           i++;
+                
+        }%>
         
       </div>
     </div>

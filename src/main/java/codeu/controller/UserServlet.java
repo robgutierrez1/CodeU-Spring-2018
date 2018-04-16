@@ -44,6 +44,9 @@ public class UserServlet extends HttpServlet {
   
   /** Checks whether the user is editing about me*/
   private Boolean editAboutMe = false;
+  
+  /** List of User Messages related to this user*/
+  private List<Message> userMessages;
 
   /**
    * Set up state for handling user-related and conversation-related requests. This method 
@@ -125,7 +128,7 @@ public class UserServlet extends HttpServlet {
     request.setAttribute("aboutMe", aboutMe);
 	
 	List<Conversation> userConversations = getUserConversations(user);
-	List<Message> userMessages = new ArrayList<Message>();
+	userMessages = new ArrayList<Message>();
 	for (Conversation conversation: userConversations) {
 	  List<Message> messages = messageStore.getMessagesInConversation(conversation.getId());
 	  userMessages.addAll(messages);
@@ -169,6 +172,12 @@ public class UserServlet extends HttpServlet {
         user.setAboutMe(enteredAboutMe);
         userStore.updateAboutMe(user, enteredAboutMe);
 		System.out.println("Submit!");
+	} else if(buttonVal.contains("hide")) {
+		int orderOfMessage = Integer.parseInt(buttonVal.substring(4));
+		userMessages.get(orderOfMessage).setOpenToPublic(false);
+	} else if(buttonVal.contains("show")) {
+		int orderOfMessage = Integer.parseInt(buttonVal.substring(4));
+		userMessages.get(orderOfMessage).setOpenToPublic(true);
 	} else {
 		// default case: shouldn't reach here
 		System.out.println("Something went wrong...");
