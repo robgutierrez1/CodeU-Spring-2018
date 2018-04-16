@@ -3,6 +3,7 @@
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.store.basic.ConversationStore" %>
 <%@ page import="java.time.Instant" %>
 <%@ page import="java.util.UUID" %>
 
@@ -46,15 +47,18 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <div id="activity">
         <ul>
-        <!-- Iterate through message list and get the author of every message
+        <!-- Iterate through message list and get data of every message
             to display on the activity feed -->
         <%
             for(Message message: messages) {
                 String author = UserStore.getInstance()
                 .getUser(message.getAuthorId()).getName();
                 String date = message.getDate(message.getCreationTime());
+                UUID ID = message.getConversationId();
+                String convo = ConversationStore.getInstance().findTitle(ID);
         %>  
-            <li><strong><%= date %>: </strong><%= author %>: "<%= message.getContent() %>"</li>
+            <li><strong><%= date %>: </strong><%= author %> sent a message in <%= convo%>: 
+             "<%= message.getContent() %>"</li>
         <%
             }
         %>
