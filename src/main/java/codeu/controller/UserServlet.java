@@ -23,6 +23,8 @@ import codeu.model.store.basic.MessageStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
@@ -133,7 +135,21 @@ public class UserServlet extends HttpServlet {
 	  List<Message> messages = messageStore.getMessagesInConversation(conversation.getId());
 	  userMessages.addAll(messages);
 	}
-	request.setAttribute("messages", userMessages);
+	
+	// added to sort userMessages
+	Collections.sort(userMessages, new Comparator<Message>() {
+		@Override
+		public int compare(Message o1, Message o2) {
+			return o2.getCreationTime().compareTo(o1.getCreationTime());
+		}
+	});
+	
+	List<Message> topTenList = new ArrayList<Message>();
+	for (int i = 0; i < userMessages.size() && i < 10; i++) {
+		topTenList.add(userMessages.get(i));
+	}
+	
+	request.setAttribute("messages", topTenList);
 	
     request.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(request, response);
   }
