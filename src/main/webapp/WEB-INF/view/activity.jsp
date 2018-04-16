@@ -2,6 +2,7 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.store.basic.UserStore" %>
 
 <!-- Get the necessary data that is going to be displayed on activity feed -->
 <%
@@ -39,25 +40,22 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   <div id="container">
     <h1>Activity Feed</h1>
     
+    <hr/>
+
     <div id="activity">
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
-        <ul>Hello</ul>
-        <ul>glorious</ul>
+        <ul>
+        <!-- Iterate through message list and get the author of every message
+            to display on the activity feed -->
+        <%
+            for(Message message: messages) {
+                String author = UserStore.getInstance()
+                .getUser(message.getAuthorId()).getName();
+        %>  
+            <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+        <%
+            }
+        %>
+        </ul>
     </div>
   </div>
 </body>
