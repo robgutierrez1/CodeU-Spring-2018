@@ -57,11 +57,35 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                 UUID ID = message.getConversationId();
                 String convo = ConversationStore.getInstance().findTitle(ID);
         %>  
-            <li><strong><%= date %>: </strong><%= author %> sent a message in <%= convo%>: 
+            <li><strong><%= date %>: </strong><%= author %> sent a message in <%= convo %>: 
              "<%= message.getContent() %>"</li>
         <%
             }
         %>
+        <!-- Iterate through conversation list and get data of every conversation to display -->
+        <%
+            for(Conversation conversation: conversations) {
+              String author = UserStore.getInstance()
+              .getUser(conversation.getOwnerId()).getName();
+              String date = conversation.getDate(conversation.getCreationTime());
+              String convo = conversation.getTitle();
+        %>
+              <li><strong><%= date %>: </strong><%= author %> created a new conversation: 
+              <%= convo %></li>
+        <%
+          }
+        %>
+        <!-- Iterate through user list and get data of every user to display -->
+        <%
+            for(User user: users) {
+              String author = user.getName();
+              String date = user.getDate(user.getCreationTime());
+        %>
+              <li><strong><%= date %>: </strong><%= author %> joined!</li>
+        <%
+          }
+        %>
+
         </ul>
     </div>
   </div>
