@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet class responsible for the conversations page. */
+/** Servlet class responsible for the user page. */
 public class UserServlet extends HttpServlet {
 
   /** Store class that gives access to Users. */
@@ -51,10 +51,10 @@ public class UserServlet extends HttpServlet {
    */
   @Override
   public void init() throws ServletException {
-    super.init();
-    setUserStore(UserStore.getInstance());
-    setConversationStore(ConversationStore.getInstance());
-    setMessageStore(MessageStore.getInstance());
+      super.init();
+      setUserStore(UserStore.getInstance());
+      setConversationStore(ConversationStore.getInstance());
+      setMessageStore(MessageStore.getInstance());
   }
 
   /**
@@ -62,7 +62,7 @@ public class UserServlet extends HttpServlet {
    * by the test framework or the servlet's init() function.
    */
   void setUserStore(UserStore userStore) {
-    this.userStore = userStore;
+      this.userStore = userStore;
   }
   
   /**
@@ -70,7 +70,7 @@ public class UserServlet extends HttpServlet {
    * by the test framework or the servlet's init() function.
    */
   void setConversationStore(ConversationStore conversationStore) {
-    this.conversationStore = conversationStore;
+      this.conversationStore = conversationStore;
   }
   
   /**
@@ -78,23 +78,23 @@ public class UserServlet extends HttpServlet {
    * use by the test framework or the servlet's init() function.
    */
   void setMessageStore(MessageStore messageStore) {
-    this.messageStore = messageStore;
+      this.messageStore = messageStore;
   }
   
   /**
    * Gets the list conversation of a particular user
    */
    List getUserConversations(User user) {
-     UUID userId = user.getId();
-     List<Conversation> allConversations = conversationStore.getAllConversations();
-     List<Conversation> userConversations = new ArrayList<Conversation>();   
-     for (Conversation conversation: allConversations) {
-       UUID conversationOwnerId = conversation.getOwnerId();
-       if (conversationOwnerId.equals(userId)) {
-         userConversations.add(conversation);
+       UUID userId = user.getId();
+       List<Conversation> allConversations = conversationStore.getAllConversations();
+       List<Conversation> userConversations = new ArrayList<Conversation>();   
+       for (Conversation conversation: allConversations) {
+           UUID conversationOwnerId = conversation.getOwnerId();
+           if (conversationOwnerId.equals(userId)) {
+               userConversations.add(conversation);
+           }
        }
-     }
-     return userConversations;
+       return userConversations;
    }
     
   /**
@@ -105,15 +105,15 @@ public class UserServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 	  
-	String requestUrl = request.getRequestURI();
+    String requestUrl = request.getRequestURI();
 	String userTitle = requestUrl.substring("/user/".length());
 	  
 	User user = userStore.getUser(userTitle);
     if (user == null) {
-      // couldn't find user, redirect to home page (for now)
-      System.out.println("Name was null: " + userTitle);
-      response.sendRedirect("/");
-      return;
+        // couldn't find user, redirect to home page (for now)
+        System.out.println("Name was null: " + userTitle);
+        response.sendRedirect("/");
+        return;
     }
 
     String viewerName = (String) request.getSession().getAttribute("user");
@@ -127,8 +127,8 @@ public class UserServlet extends HttpServlet {
 	List<Conversation> userConversations = getUserConversations(user);
 	List<Message> userMessages = new ArrayList<Message>();
 	for (Conversation conversation: userConversations) {
-	  List<Message> messages = messageStore.getMessagesInConversation(conversation.getId());
-	  userMessages.addAll(messages);
+	    List<Message> messages = messageStore.getMessagesInConversation(conversation.getId());
+	    userMessages.addAll(messages);
 	}
 	request.setAttribute("messages", userMessages);
 	
@@ -138,43 +138,43 @@ public class UserServlet extends HttpServlet {
   /**
    * This function fires when a user submits a change in the about me section. It gets the
    * logged-in username from the session and the new conversation title from the submitted form
-   * data. It uses this to create a new Conversation object that it adds to the model.
+   * data. It uses this to update the about me that adds to the model.
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException{
 	  
-	String requestUrl = request.getRequestURI();
-	String userTitle = requestUrl.substring("/user/".length());
+	  String requestUrl = request.getRequestURI();
+	  String userTitle = requestUrl.substring("/user/".length());
           
-    User user = userStore.getUser(userTitle);
-    if (user == null) {
-      // couldn't find user, redirect to home page (for now)
-      System.out.println("Name was null: " + userTitle);
-      response.sendRedirect("/");
-      return;
-    }
+      User user = userStore.getUser(userTitle);
+      if (user == null) {
+          // couldn't find user, redirect to home page (for now)
+          System.out.println("Name was null: " + userTitle);
+          response.sendRedirect("/");
+          return;
+      }
 	
-	String buttonVal = request.getParameter("buttonVal");
-    String enteredAboutMe = request.getParameter("enteredAboutMe");
+	  String buttonVal = request.getParameter("buttonVal");
+      String enteredAboutMe = request.getParameter("enteredAboutMe");
 	
-	if (buttonVal.equals("edit")) {
-		editAboutMe = true;
-		System.out.println("Edit!");
-	} else if (buttonVal.equals("cancel")) {
-		editAboutMe = false;
-		System.out.println("Cancel!");
-	} else if (buttonVal.equals("submit")){
-		editAboutMe = false; // finish editing
-        user.setAboutMe(enteredAboutMe);
-        userStore.updateAboutMe(user, enteredAboutMe);
-		System.out.println("Submit!");
-	} else {
-		// default case: shouldn't reach here
-		System.out.println("Something went wrong...");
-	}
+	  if (buttonVal.equals("edit")) {
+		  editAboutMe = true;
+		  System.out.println("Edit!");
+	  } else if (buttonVal.equals("cancel")) {
+		  editAboutMe = false;
+		  System.out.println("Cancel!");
+	  } else if (buttonVal.equals("submit")){
+		  editAboutMe = false; // finish editing
+          user.setAboutMe(enteredAboutMe);
+          userStore.updateAboutMe(user, enteredAboutMe);
+		  System.out.println("Submit!");
+	 } else {
+		  // default case: shouldn't reach here
+		  System.out.println("Something went wrong...");
+	 }
 	  
-	response.sendRedirect("/user/" + userTitle);
+	 response.sendRedirect("/user/" + userTitle);
   }
 }
 
