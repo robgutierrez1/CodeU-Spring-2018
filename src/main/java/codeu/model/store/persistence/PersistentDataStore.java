@@ -67,6 +67,9 @@ public class PersistentDataStore {
         String password = (String) entity.getProperty("password");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String aboutMe = (String) entity.getProperty("aboutme");
+        if (aboutMe == null){
+          aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
+        }
         User user = new User(uuid, userName, password, creationTime, aboutMe);
         users.add(user);
       } catch (Exception e) {
@@ -166,7 +169,6 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         if (uuid.equals(user.getId())) {
-          entity.removeProperty("aboutme");
           entity.setProperty("aboutme", aboutMe);
           datastore.put(entity);
         }

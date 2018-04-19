@@ -104,7 +104,7 @@ public class UserStore {
     persistentStorageAgent.writeThrough(user);
   }
 
-  /** Add a new user to the current set of users known to the application.*/
+  /** Update aboutme for a user*/
   public void updateAboutMe(User user, String aboutMe) {
     persistentStorageAgent.updateAboutMe(user, aboutMe);
   }
