@@ -6,12 +6,19 @@
 <%@ page import="codeu.model.store.basic.ConversationStore" %>
 <%@ page import="java.time.Instant" %>
 <%@ page import="java.util.UUID" %>
+<%@page import="java.util.ArrayList" %>
 
 <!-- Get the necessary data that is going to be displayed on activity feed -->
 <%
 List<Conversation> conversations = (List<Conversation>) request.getAttribute("conversations");
 List<User> users = (List<User>) request.getAttribute("users");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+%>
+
+<%
+ArrayList<Conversation> conversationsArray = new ArrayList<Conversation>();
+ArrayList<User> usersArray = new ArrayList<User>();
+ArrayList<Message> messagesArray = new ArrayList<Message>();
 %>
 
 <!DOCTYPE html>
@@ -56,6 +63,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                 String date = message.getDate(message.getCreationTime());
                 UUID ID = message.getConversationId();
                 String convo = ConversationStore.getInstance().findTitle(ID);
+                messagesArray.add(message);
         %>  
             <li><strong><%= date %>: </strong><%= author %> sent a message in <%= convo %>: 
              "<%= message.getContent() %>"</li>
@@ -69,6 +77,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
               .getUser(conversation.getOwnerId()).getName();
               String date = conversation.getDate(conversation.getCreationTime());
               String convo = conversation.getTitle();
+              conversationsArray.add(conversation);
         %>
               <li><strong><%= date %>: </strong><%= author %> created a new conversation: 
               <%= convo %></li>
@@ -80,11 +89,13 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
             for(User user: users) {
               String author = user.getName();
               String date = user.getDate(user.getCreationTime());
-        %>
+              usersArray.add(user);
+        %>     
               <li><strong><%= date %>: </strong><%= author %> joined!</li>
         <%
           }
         %>
+
 
         </ul>
     </div>

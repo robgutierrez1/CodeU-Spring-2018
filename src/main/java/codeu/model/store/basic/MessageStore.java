@@ -19,6 +19,9 @@ import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -108,7 +111,10 @@ public class MessageStore {
   }
 
   /** Added. Return list of all messages. Used in activity feed */
+  /** sorts list by date, then reverses list so most recent is first*/
   public List<Message> getAllMessages() {
+    Collections.sort(messages, new MessageComparator());
+    Collections.reverse(messages);
     return messages;
   }
 }

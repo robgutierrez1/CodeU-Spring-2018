@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 // Added
 import java.util.UUID;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -85,6 +88,8 @@ public class ConversationStore {
 
   /** Access the current set of conversations known to the application. */
   public List<Conversation> getAllConversations() {
+    Collections.sort(conversations, new ConversationComparator());
+    Collections.reverse(conversations);
     return conversations;
   }
 
