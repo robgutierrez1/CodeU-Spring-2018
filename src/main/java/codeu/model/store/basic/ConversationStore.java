@@ -18,6 +18,11 @@ import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
+// Added
+import java.util.UUID;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -83,6 +88,8 @@ public class ConversationStore {
 
   /** Access the current set of conversations known to the application. */
   public List<Conversation> getAllConversations() {
+    Collections.sort(conversations, new ConversationComparator());
+    Collections.reverse(conversations);
     return conversations;
   }
 
@@ -116,5 +123,15 @@ public class ConversationStore {
   /** Sets the List of Conversations stored by this ConversationStore. */
   public void setConversations(List<Conversation> conversations) {
     this.conversations = conversations;
+  }
+
+  /** Find conversation with given UUID. Use in Activity Feed */
+  public String findTitle(UUID ID) {
+    for(Conversation conversation: conversations) {
+      if(conversation.getId().equals(ID)) {
+        return conversation.getTitle();
+      }
+    }
+    return "No Conversation";
   }
 }
