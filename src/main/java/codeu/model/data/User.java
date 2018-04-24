@@ -16,6 +16,10 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+// Added
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /** Class representing a registered user. */
 public class User {
@@ -60,5 +64,12 @@ public class User {
   /** Returns the creation time of this User. */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /** Accepts and instant and returns a string of the formatted date */
+  public String getDate(Instant time) {
+    LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
+    String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
+    return formatted;
   }
 }
