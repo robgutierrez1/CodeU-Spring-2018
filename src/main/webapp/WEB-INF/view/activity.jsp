@@ -6,6 +6,10 @@
 <%@ page import="codeu.model.store.basic.ConversationStore" %>
 <%@ page import="java.time.Instant" %>
 <%@ page import="java.util.UUID" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="codeu.comparators.ConversationComparator" %>
+<%@ page import="codeu.comparators.UserComparator" %>
+<%@ page import="codeu.comparators.MessageComparator" %>
 
 <!-- Get the necessary data that is going to be displayed on activity feed -->
 <%
@@ -47,25 +51,21 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <div id="activity">
         <ul>
-          <!-- Need to figure out how to sort these initially-->
           <!-- Also this is extremely gacky! Need to figure out how to put code in functions! -->
-          <!-- Lists have a get method so no need for arrays. Change it! -->
-        <% 
-            // Convert lists to arrays for easier iteration
-            Conversation[] con_array = new Conversation[conversations.size()];
-            con_array = conversations.toArray(con_array);
-            User[] user_array = new User[users.size()];
-            user_array = users.toArray(user_array);
-            Message[] message_array = new Message[messages.size()];
-            message_array = messages.toArray(message_array);
-            
+          <!-- Remember that we still need to test! -->
+        <%  
+            // Sort the Lists
+            Collections.sort(conversations, new ConversationComparator());
+            Collections.sort(users, new UserComparator());
+            Collections.sort(messages, new MessageComparator());
+
             // Figure out the smallest array size of the three
-            int smallest_size = con_array.length;
-            if(smallest_size > user_array.length) {
-              smallest_size = user_array.length;
+            int smallest_size = conversations.size();
+            if(smallest_size > users.size()) {
+              smallest_size = users.size();
             }
-            if(smallest_size > message_array.length) {
-                smallest_size = message_array.length;
+            if(smallest_size > messages.size()) {
+                smallest_size = messages.size();
             }
             // Initialize indexes for traversal through the arrays
             int con_index = 0;
@@ -79,13 +79,13 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
             // Iterate through data arrays to order activity log based on time
             while(con_ended && user_ended && message_ended) {
-              Instant con_time = con_array[con_index].getCreationTime();
-              Instant user_time = user_array[user_index].getCreationTime();
-              Instant message_time = message_array[message_index].getCreationTime();
+              Instant con_time = conversations.get(con_index).getCreationTime();
+              Instant user_time = users.get(user_index).getCreationTime();
+              Instant message_time = messages.get(message_index).getCreationTime();
 
               // Conversation created before user and message
               if(con_time.compareTo(user_time) < 0 && con_time.compareTo(message_time) < 0) {
-                Conversation con = con_array[con_index];
+                Conversation con = conversations.get(con_index);
                 String author = UserStore.getInstance()
                 .getUser(con.getOwnerId()).getName();
                 String date = con.getDate(con_time);
@@ -98,7 +98,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
               } 
               // User created before message and conversation
               else if(user_time.compareTo(con_time) < 0 && user_time.compareTo(message_time) < 0) {
-                User us = user_array[user_index];
+                User us = users.get(user_index);
                 String author = us.getName();
                 String date = us.getDate(user_time);
         %>
@@ -108,7 +108,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
               }
               // Message created before conversation and user
               else if(message_time.compareTo(con_time) < 0 && message_time.compareTo(user_time) < 0) {
-                Message mess = message_array[message_index];
+                Message mess = messages.get(message_index);
                 String author = UserStore.getInstance()
                 .getUser(mess.getAuthorId()).getName();
                 String date = mess.getDate(message_time);
@@ -159,22 +159,22 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                 // Users and messages left
                 if(user_ended && message_ended) {
                   while(user_ended && message_ended) {
-                    Instant user_time = user_array[user_index].getCreationTime();
-                    Instant message_time = message_array[message_index].getCreationTime();
+                    Instant user_time = users.get(user_index).getCreationTime();
+                    Instant message_time = messages.get(message_index).getCreationTime();
                     // User created before message
                     if(user_time.compareTo(message_time) < 0) {
-                      User us = user_array[user_index];
+                      User us = users.get(user_index);
                       String author = us.getName();
                       String date = us.getDate(user_time);
             %>
                       <li><strong><%= date %>: </strong><%= author %> joined!</li>
             <%
                       user_index++;
-                      user_ended = user_index < user_array.length;
+                      user_ended = user_index < users.size();
                     }
                     // User created after message
                     else if(user_time.compareTo(message_time) > 0) {
-                        Message mess = message_array[message_index];
+                        Message mess = messages.get(message_index);
                         String author = UserStore.getInstance()
                         .getUser(mess.getAuthorId()).getName();
                         String date = mess.getDate(message_time);
@@ -185,22 +185,22 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                         "<%= mess.getContent() %>"</li>
             <%
                         message_index++;
-                        message_ended = message_index < message_array.length;
+                        message_ended = message_index < messages.size();
                     } 
                     // Message and user created at the same time
                     else {
                         // User Display
-                        User us = user_array[user_index];
+                        User us = users.get(user_index);
                         String author = us.getName();
                         String date = us.getDate(user_time);
             %>
                         <li><strong><%= date %>: </strong><%= author %> joined!</li>
             <%
                         user_index++;
-                        user_ended = user_index < user_array.length;
+                        user_ended = user_index < users.size();
                         
                         // Message Display
-                        Message mess = message_array[message_index];
+                        Message mess = messages.get(message_index);
                         author = UserStore.getInstance()
                         .getUser(mess.getAuthorId()).getName();
                         date = mess.getDate(message_time);
@@ -211,15 +211,15 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                         "<%= mess.getContent() %>"</li>
             <%
                         message_index++;
-                        message_ended = message_index < message_array.length;
+                        message_ended = message_index < messages.size();
                     }
                   }
                 }
                 // Also out of users. May have messages left
                 else if(!user_ended) {
                   while(message_ended) {
-                    Instant message_time = message_array[message_index].getCreationTime();
-                    Message mess = message_array[message_index];
+                    Instant message_time = messages.get(message_index).getCreationTime();
+                    Message mess = messages.get(message_index);
                     String author = UserStore.getInstance()
                     .getUser(mess.getAuthorId()).getName();
                     String date = mess.getDate(message_time);
@@ -230,22 +230,22 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                     "<%= mess.getContent() %>"</li>
           <%
                     message_index++;
-                    message_ended = message_index < message_array.length;
+                    message_ended = message_index < messages.size();
                   }
                   // No conversations, users, or messages left at this point
                 } 
                 // Also out of messages. May have users left
                 else if(!message_ended) {
                   while(user_ended) {
-                    Instant user_time = user_array[user_index].getCreationTime();
-                    User us = user_array[user_index];
+                    Instant user_time = users.get(user_index).getCreationTime();
+                    User us = users.get(user_index);
                     String author = us.getName();
                     String date = us.getDate(user_time);
           %>
                     <li><strong><%= date %>: </strong><%= author %> joined!</li>
           <%
                     user_index++;
-                    user_ended = user_index < user_array.length;
+                    user_ended = user_index < users.size();
                   }
                   // No conversations, users, or messages left at this point
                 }
@@ -255,10 +255,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                 // Conversations and messages left
                 if(con_ended && message_ended) {
                   while(con_ended && message_ended) {
-                    Instant con_time = con_array[con_index].getCreationTime();
-                    Instant message_time = message_array[message_index].getCreationTime();
+                    Instant con_time = conversations.get(con_index).getCreationTime();
+                    Instant message_time = messages.get(message_index).getCreationTime();
                     if(con_time.compareTo(message_time) < 0) {
-                      Conversation con = con_array[con_index];
+                      Conversation con = conversations.get(con_index);
                       String author = UserStore.getInstance()
                       .getUser(con.getOwnerId()).getName();
                       String date = con.getDate(con_time);
@@ -268,9 +268,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                       <%= convo %></li>
             <%
                       con_index++;
-                      con_ended = con_index < con_array.length;
+                      con_ended = con_index < conversations.size();
                     } else if(con_time.compareTo(message_time) > 0) {
-                      Message mess = message_array[message_index];
+                      Message mess = messages.get(message_index);
                       String author = UserStore.getInstance()
                       .getUser(mess.getAuthorId()).getName();
                       String date = mess.getDate(message_time);
@@ -281,10 +281,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                       "<%= mess.getContent() %>"</li>
             <%
                       message_index++;
-                      message_ended = message_index < message_array.length;
+                      message_ended = message_index < messages.size();
                     } else {
                       // Conversation Display
-                      Conversation con = con_array[con_index];
+                      Conversation con = conversations.get(con_index);
                       String author = UserStore.getInstance()
                       .getUser(con.getOwnerId()).getName();
                       String date = con.getDate(con_time);
@@ -294,10 +294,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                       <%= convo %></li>
             <%
                       con_index++;
-                      con_ended = con_index < con_array.length;
+                      con_ended = con_index < conversations.size();
                       
                       // Message Display
-                      Message mess = message_array[message_index];
+                      Message mess = messages.get(message_index);
                       author = UserStore.getInstance()
                       .getUser(mess.getAuthorId()).getName();
                       date = mess.getDate(message_time);
@@ -308,7 +308,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                       "<%= mess.getContent() %>"</li>
             <%
                       message_index++;
-                      message_ended = message_index < message_array.length;
+                      message_ended = message_index < messages.size();
                     }
                   }
                 }
@@ -316,8 +316,8 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                 else if(!con_ended) {
                   // Figure out how to get rid of repeated code!
                   while(message_ended) {
-                    Instant message_time = message_array[message_index].getCreationTime();
-                    Message mess = message_array[message_index];
+                    Instant message_time = messages.get(message_index).getCreationTime();
+                    Message mess = messages.get(message_index);
                     String author = UserStore.getInstance()
                     .getUser(mess.getAuthorId()).getName();
                     String date = mess.getDate(message_time);
@@ -328,15 +328,15 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                     "<%= mess.getContent() %>"</li>
           <%
                     message_index++;
-                    message_ended = message_index < message_array.length;
+                    message_ended = message_index < messages.size();
                   }
                   // No conversations, users, or messages left at this point
                 }
                 // Also out of messages. May have conversations left
                 else if(!message_ended) {
                   while(con_ended) {
-                    Instant con_time = con_array[con_index].getCreationTime();
-                    Conversation con = con_array[con_index];
+                    Instant con_time = conversations.get(con_index).getCreationTime();
+                    Conversation con = conversations.get(con_index);
                     String author = UserStore.getInstance()
                     .getUser(con.getOwnerId()).getName();
                     String date = con.getDate(con_time);
@@ -346,7 +346,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                     <%= convo %></li>
           <%
                     con_index++;
-                    con_ended = con_index < con_array.length;
+                    con_ended = con_index < conversations.size();
                   }
                   // No conversations, users, or messages left at this point
                 }
@@ -356,10 +356,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                 // Conversations and users left
                 if(con_ended && user_ended) {
                   while(con_ended && user_ended) {
-                    Instant con_time = con_array[con_index].getCreationTime();
-                    Instant user_time = user_array[user_index].getCreationTime();
+                    Instant con_time = conversations.get(con_index).getCreationTime();
+                    Instant user_time = users.get(user_index).getCreationTime();
                     if(con_time.compareTo(user_time) < 0) {
-                      Conversation con = con_array[con_index];
+                      Conversation con = conversations.get(con_index);
                       String author = UserStore.getInstance()
                       .getUser(con.getOwnerId()).getName();
                       String date = con.getDate(con_time);
@@ -369,19 +369,19 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                       <%= convo %></li>
             <%
                       con_index++;
-                      con_ended = con_index < con_array.length;
+                      con_ended = con_index < conversations.size();
                     } else if(con_time.compareTo(user_time) > 0) {
-                        User us = user_array[user_index];
+                        User us = users.get(user_index);
                         String author = us.getName();
                         String date = us.getDate(user_time);
             %>
                         <li><strong><%= date %>: </strong><%= author %> joined!</li>
             <%
                         user_index++;
-                        user_ended = user_index < user_array.length;
+                        user_ended = user_index < users.size();
                     } else {
                         // Conversation Display
-                        Conversation con = con_array[con_index];
+                        Conversation con = conversations.get(con_index);
                         String author = UserStore.getInstance()
                         .getUser(con.getOwnerId()).getName();
                         String date = con.getDate(con_time);
@@ -391,40 +391,40 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                         <%= convo %></li>
             <%
                         con_index++;
-                        con_ended = con_index < con_array.length;
+                        con_ended = con_index < conversations.size();
                         
                         // User Display
-                        User us = user_array[user_index];
+                        User us = users.get(user_index);
                         author = us.getName();
                         date = us.getDate(user_time);
             %>
                         <li><strong><%= date %>: </strong><%= author %> joined!</li>
             <%
                         user_index++;
-                        user_ended = user_index < user_array.length;
+                        user_ended = user_index < users.size();
                     }
                   }
                 }
                 // Also out of conversations. Users may be left
                 else if(!con_ended) {
                   while(user_ended) {
-                    Instant user_time = user_array[user_index].getCreationTime();
-                    User us = user_array[user_index];
+                    Instant user_time = users.get(user_index).getCreationTime();
+                    User us = users.get(user_index);
                     String author = us.getName();
                     String date = us.getDate(user_time);
           %>
                     <li><strong><%= date %>: </strong><%= author %> joined!</li>
           <%
                     user_index++;
-                    user_ended = user_index < user_array.length;
+                    user_ended = user_index < users.size();
                   }
                   // No conversations, users, or messages left at this point
                 }
                 // Also out of users. May have conversations left
                 else if(!user_ended) {
                   while(con_ended) {
-                    Instant con_time = con_array[con_index].getCreationTime();
-                    Conversation con = con_array[con_index];
+                    Instant con_time = conversations.get(con_index).getCreationTime();
+                    Conversation con = conversations.get(con_index);
                     String author = UserStore.getInstance()
                     .getUser(con.getOwnerId()).getName();
                     String date = con.getDate(con_time);
@@ -434,7 +434,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                     <%= convo %></li>
           <%
                     con_index++;
-                    con_ended = con_index < con_array.length;
+                    con_ended = con_index < conversations.size();
                   }
                   // No conversations, users, or messages left at this point
                 }
