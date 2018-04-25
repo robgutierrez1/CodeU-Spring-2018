@@ -20,6 +20,8 @@ import java.util.UUID;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import codeu.model.data.User;
 
 /** Class representing a registered user. */
 public class User {
@@ -27,6 +29,8 @@ public class User {
   private final String name;
   private final String hashedPassword;
   private final Instant creation;
+  private final ArrayList<User> friends;
+  private final ArrayList<User> requests;
 
   /**
    * Constructs a new User.
@@ -41,6 +45,8 @@ public class User {
     this.name = name;
     this.hashedPassword = password;
     this.creation = creation;
+    this.friends = new ArrayList<User>();
+    this.requests = new ArrayList<User>();
   }
 
   /** Returns the ID of this User. */
@@ -71,5 +77,20 @@ public class User {
     LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
     String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
     return formatted;
+  }
+
+  /** Return the list of friends for this user */
+  public ArrayList<User> getFriends() {
+    return this.friends;
+  }
+
+  /** Add a friend to this user's friend list */
+  public void addFriend(User user) {
+    this.friends.add(user);
+  }
+
+  /** Return the list of friend requests */
+  public ArrayList<User> getRequests() {
+    return this.requests;
   }
 }

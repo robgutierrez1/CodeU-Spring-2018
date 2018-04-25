@@ -30,16 +30,16 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
           height: 500px;
           overflow-y: scroll
         }
-      </style>
+  </style>
     
-      <script>
-        // scroll the chat div to the bottom
-        function activityChat() {
-          var activityDiv = document.getElementById('activity');
-          activityDiv.scrollTop = activityDiv.scrollHeight;
-        };
-      </script>
-    </head>
+    <script>
+      // scroll the chat div to the bottom
+      function activityChat() {
+        var activityDiv = document.getElementById('activity');
+        activityDiv.scrollTop = activityDiv.scrollHeight;
+      };
+    </script>
+</head>
     <body onload="activityChat()">
 
   <%@ include file="/navbar.html" %>

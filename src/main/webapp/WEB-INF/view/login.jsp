@@ -36,7 +36,7 @@
       <input type="text" name="username" id="username">
       <br/>
       <!-- Password Field -->
-      <label for="password">Password: </label>
+      <label for="password">Password:  </label>
       <input type="password" name="password" id="password">
       <br/><br/>
       <button type="submit">Login</button>
