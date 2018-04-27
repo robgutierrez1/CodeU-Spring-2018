@@ -23,13 +23,13 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 /** Class representing a message. Messages are sent by a User in a Conversation. */
-public class Message {
+public class Message extends Activity {
 
   private final UUID id;
   private final UUID conversation;
   private final UUID author;
   private final String content;
-  private final Instant creation;
+  //private final Instant creation;
 
   /**
    * Constructs a new Message.
@@ -41,11 +41,12 @@ public class Message {
    * @param creation the creation time of this Message
    */
   public Message(UUID id, UUID conversation, UUID author, String content, Instant creation) {
+    super(creation, "Message");
     this.id = id;
     this.conversation = conversation;
     this.author = author;
     this.content = content;
-    this.creation = creation;
+    //this.creation = creation;
   }
 
   /** Returns the ID of this Message. */
@@ -68,15 +69,15 @@ public class Message {
     return content;
   }
 
-  /** Returns the creation time of this Message. */
+  /** Returns the creation time of this Message. 
   public Instant getCreationTime() {
     return creation;
   }
 
-  /** Accepts and instant and returns a string of the formatted date */
+  Accepts and instant and returns a string of the formatted date 
   public String getDate(Instant time) {
     LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
     String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
     return formatted;
-  }
+  }*/
 }
