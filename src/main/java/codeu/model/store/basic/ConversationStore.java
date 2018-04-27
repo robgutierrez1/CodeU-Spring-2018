@@ -15,6 +15,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Activity;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class ConversationStore {
 
   /** Singleton instance of ConversationStore. */
   private static ConversationStore instance;
+
 
   /**
    * Returns the singleton instance of ConversationStore that should be shared between all servlet
@@ -62,6 +64,11 @@ public class ConversationStore {
 
   /** The in-memory list of Conversations. */
   private List<Conversation> conversations;
+
+
+  // private List<Activity> activities;
+  // activities = new ArrayList<>();
+  // activities = activities.getAllActivities();
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
@@ -96,6 +103,7 @@ public class ConversationStore {
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
+    //ActivityStore.activities.add(conversation);
     persistentStorageAgent.writeThrough(conversation);
   }
 

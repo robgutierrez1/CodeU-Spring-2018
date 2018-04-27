@@ -2,8 +2,10 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.data.Activity" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.store.basic.ConversationStore" %>
+<%@ page import="codeu.model.store.basic.ActivityStore" %>
 <%@ page import="java.time.Instant" %>
 <%@ page import="java.util.UUID" %>
 <%@page import="java.util.ArrayList" %>
@@ -13,6 +15,7 @@
 List<Conversation> conversations = (List<Conversation>) request.getAttribute("conversations");
 List<User> users = (List<User>) request.getAttribute("users");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+List<Activity> activities = (List<Activity>) request.getAttribute("activities");
 %>
 
 <%
@@ -64,6 +67,7 @@ ArrayList<Message> messagesArray = new ArrayList<Message>();
                 UUID ID = message.getConversationId();
                 String convo = ConversationStore.getInstance().findTitle(ID);
                 messagesArray.add(message);
+                //activityStore.addActivity(message);
         %>  
             <li><strong><%= date %>: </strong><%= author %> sent a message in <%= convo %>: 
              "<%= message.getContent() %>"</li>
@@ -78,6 +82,7 @@ ArrayList<Message> messagesArray = new ArrayList<Message>();
               String date = conversation.getDate(conversation.getCreationTime());
               String convo = conversation.getTitle();
               conversationsArray.add(conversation);
+              //activityStore.addActivity(conversation);
         %>
               <li><strong><%= date %>: </strong><%= author %> created a new conversation: 
               <%= convo %></li>
@@ -90,12 +95,18 @@ ArrayList<Message> messagesArray = new ArrayList<Message>();
               String author = user.getName();
               String date = user.getDate(user.getCreationTime());
               usersArray.add(user);
+              //activityStore.addActivity(user);
         %>     
               <li><strong><%= date %>: </strong><%= author %> joined!</li>
         <%
           }
         %>
 
+
+        
+
+      
+     
 
         </ul>
     </div>

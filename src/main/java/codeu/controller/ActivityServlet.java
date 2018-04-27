@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.ActivityStore;
 import codeu.model.data.User;
 import codeu.model.data.Message;
 import codeu.model.data.Conversation;
+import codeu.model.data.Activity;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.List;
@@ -27,6 +29,9 @@ public class ActivityServlet extends HttpServlet {
   /** Store class that gives access to Messages */
   private MessageStore messageStore;
 
+  /** Store class that gives access to Activity */
+  private ActivityStore activityStore;
+
   /**
     * Set up state for handling activity-related requests. This method is only
     * called when running in a server, not when running in a test.
@@ -37,6 +42,7 @@ public class ActivityServlet extends HttpServlet {
     setConversationStore(ConversationStore.getInstance());
     setUserStore(UserStore.getInstance());
     setMessageStore(MessageStore.getInstance());
+    setActivityStore(ActivityStore.getInstance());
   }
 
   /**
@@ -64,6 +70,14 @@ public class ActivityServlet extends HttpServlet {
   }
 
   /**
+   * Sets the MessageStore used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
+   */
+  void setActivityStore(ActivityStore activityStore) {
+    this.activityStore = activityStore;
+  }
+
+  /**
     * This function fires when a user navigates to the activity page. It gets all of the 
     * conversations, messages, and users that will be displayed on the activity feed.
     * Forwards to activity.jsp for rendering the activity feed. The activity feed in this case
@@ -75,9 +89,11 @@ public class ActivityServlet extends HttpServlet {
         List<Conversation> conversations = conversationStore.getAllConversations();
         List<User> users = userStore.getAllUsers();
         List<Message> messages = messageStore.getAllMessages();
+        List<Activity> activities = activityStore.getAllActivities();
         request.setAttribute("conversations", conversations);
         request.setAttribute("users", users);
         request.setAttribute("messages", messages);
+        request.setAttribute("activities", activities);
         request.getRequestDispatcher("/WEB-INF/view/activity.jsp").forward(request, response);
     }
 
