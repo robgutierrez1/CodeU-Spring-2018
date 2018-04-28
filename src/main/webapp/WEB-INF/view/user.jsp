@@ -15,12 +15,15 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%
 User user = (User) request.getAttribute("user");
 User viewer = (User) request.getAttribute("viewer");
 Boolean editAboutMe = (Boolean) request.getAttribute("editAboutMe");
 Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
 List<Message> userMessages = (List<Message>) request.getAttribute("messages");
+BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
 
 <!DOCTYPE html>
@@ -44,6 +47,14 @@ List<Message> userMessages = (List<Message>) request.getAttribute("messages");
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
       <h1><%= user.getName() %>'s Profile Page</h1>
+      
+      Profile picture not set. <br />
+      <img src="<%=user.getImageUrl()%>" alt="profile image" width="500" height="377"> 
+      <form action="<%= blobstoreService.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+      	<input type="file" name="myFile">
+        <input type="submit" value="Submit">
+    </form>
+
       <h2>My profile :) </h2>
 
       <div>

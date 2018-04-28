@@ -26,11 +26,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 /** Servlet class responsible for the conversations page. */
 public class UserServlet extends HttpServlet {
@@ -49,6 +53,9 @@ public class UserServlet extends HttpServlet {
   
   /** List of User Messages related to this user*/
   private List<Message> userMessages;
+  
+  /** Blobstore that stores a map of blob keys and the url for image storage*/
+  private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
   /**
    * Set up state for handling user-related and conversation-related requests. This method 
@@ -109,17 +116,18 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-	  
+	System.out.println("doGet, userServlet");
 	String requestUrl = request.getRequestURI();
 	String userTitle = requestUrl.substring("/user/".length());
 	  
 	User user = userStore.getUser(userTitle);
     if (user == null) {
       // couldn't find user, redirect to home page (for now)
-      System.out.println("Name was null: " + userTitle);
-      response.sendRedirect("/");
+      System.out.println("A in doget, userservlet: Name was null: " + userTitle);
+      response.sendRedirect("/conversations");
       return;
     }
+    System.out.println("A in doget UserServlet: Name was NOT null: " + userTitle);
 
     String viewerName = (String) request.getSession().getAttribute("user");
     User viewer = userStore.getUser(viewerName);
@@ -149,6 +157,13 @@ public class UserServlet extends HttpServlet {
 		topTenList.add(userMessages.get(i));
 	}
 	
+	//String blobKeyStr = request.getParameter("blob-key");
+	//System.out.println("blobkeystr is:" + blobKeyStr);
+	//if(blobKeyStr != null){
+		//BlobKey blobKey = new BlobKey(blobKeyStr);
+    	//blobstoreService.serve(blobKey, response);
+	//}
+	
 	request.setAttribute("messages", topTenList);
 	
     request.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(request, response);
@@ -162,22 +177,25 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException{
-	  
+	System.out.println("doPost, userServlet");
 	String requestUrl = request.getRequestURI();
 	String userTitle = requestUrl.substring("/user/".length());
           
     User user = userStore.getUser(userTitle);
     if (user == null) {
       // couldn't find user, redirect to home page (for now)
-      System.out.println("Name was null: " + userTitle);
+      System.out.println("in doPost, userservlet: Name was null: " + userTitle);
       response.sendRedirect("/");
       return;
     }
-	
+	System.out.println("in doPost, UserServlet: Name was NOT null: " + userTitle);
 	String buttonVal = request.getParameter("buttonVal");
     String enteredAboutMe = request.getParameter("enteredAboutMe");
 	
-	if (buttonVal.equals("edit")) {
+	if(buttonVal == null){
+		System.out.println("not updating aboutme");
+	}
+	else if (buttonVal.equals("edit")) {
 		editAboutMe = true;
 		System.out.println("Edit!");
 	} else if (buttonVal.equals("cancel")) {
@@ -198,6 +216,18 @@ public class UserServlet extends HttpServlet {
 		// default case: shouldn't reach here
 		System.out.println("Something went wrong...");
 	}
+	
+	//Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    //List<BlobKey> blobKeys = blobs.get("myFile");
+
+	//String url = "";
+    //if (blobKeys == null || blobKeys.isEmpty()) {
+      //  url = "";
+    //} else {
+     //   url = "/serve?blob-key=" + blobKeys.get(0).getKeyString();
+    //}
+    //System.out.println("the url is:" + url);
+    // always redirect to the profile page, because redirecting is essentially refreshing
 	  
 	response.sendRedirect("/user/" + userTitle);
   }
