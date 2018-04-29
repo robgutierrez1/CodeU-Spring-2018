@@ -75,5 +75,15 @@
     <servlet-name>TestDataServlet</servlet-name>
     <url-pattern>/testdata</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>UserServlet</servlet-name>
+    <servlet-class>codeu.controller.UserServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/user/*</url-pattern>
+  </servlet-mapping>
 
 </web-app>
