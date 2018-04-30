@@ -15,6 +15,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.User;
+import codeu.model.store.persistence.PersistentDataStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,5 +126,15 @@ public class UserStore {
   /** Added. Return list of all users. Used in Activity Feed */
   public List<User> getAllUsers() {
     return users;
+  }
+
+  /** Update the request list for the given user */
+  public void updateFriendRequests(User other_user, ArrayList<User> requests) {
+    persistentStorageAgent.updateRequests(other_user, requests);
+  }
+
+  /** Update the friends list of this user */
+  public void updateFriends(User this_user, ArrayList<User> friends) {
+    persistentStorageAgent.updateFriends(this_user, friends);
   }
 }

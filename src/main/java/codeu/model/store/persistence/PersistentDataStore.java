@@ -66,7 +66,9 @@ public class PersistentDataStore {
         String userName = (String) entity.getProperty("username");
         String password = (String)entity.getProperty("password");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        User user = new User(uuid, userName, password, creationTime);
+        ArrayList<User> friends = (ArrayList<User>) entity.getProperty("friends");
+        ArrayList<User> requests = (ArrayList<User>) entity.getProperty("requests");
+        User user = new User(uuid, userName, password, creationTime, friends, requests);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -153,6 +155,9 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    // Added
+    userEntity.setProperty("friends", user.getFriends());
+    userEntity.setProperty("requests", user.getRequests());
     datastore.put(userEntity);
   }
 
@@ -175,5 +180,32 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+  }
+  /** Update a User object's request list to the Datastore service */
+  public void updateRequests(User other_user, ArrayList<User> requests) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+
+    for(Entity entity: results.asIterable()) {
+      UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+      if(uuid.equals(other_user.getId())) {
+        entity.setProperty("requests", requests);
+        datastore.put(entity);
+      }
+    }
+  }
+
+  /** Update a User object's friends list to the Datastore service */
+  public void updateFriends(User this_user, ArrayList<User> friends) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+
+    for(Entity entity: results.asIterable()) {
+      UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+      if(uuid.equals(this_user.getId())) {
+        entity.setProperty("friends", friends);
+        datastore.put(entity);
+      }
+    }
   }
 }

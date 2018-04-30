@@ -18,6 +18,8 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStore;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,5 +104,13 @@ public class PersistentStorageAgent {
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Message message) {
     persistentDataStore.writeThrough(message);
+  }
+
+  public void updateRequests(User other_user, ArrayList<User> requests) {
+    persistentDataStore.updateRequests(other_user, requests);
+  }
+
+  public void updateFriends(User this_user, ArrayList<User> friends) {
+    persistentDataStore.updateFriends(this_user, friends);
   }
 }

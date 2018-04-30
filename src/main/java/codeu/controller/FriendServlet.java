@@ -71,13 +71,14 @@ public class FriendServlet extends HttpServlet {
             // Add user to friend requests of potential friend
             ArrayList<User> requests = other_user.getRequests();
             requests.add(this_user);
-            // Save list in persistent storage
-            // request.setAttribute("requests", requests);
+            // Update the requests of the other user
+            userStore.updateFriendRequests(other_user, requests);
             request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
         }
         // User not found
         else {
         request.setAttribute("error", "That username was not found.");
+        request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
         }
     } 
     // Accept friend request
@@ -93,8 +94,11 @@ public class FriendServlet extends HttpServlet {
         friends.add(other_user);
         other_friends.add(this_user);
         requests.remove(other_user);
-        request.setAttribute("friends", friends);
-        request.setAttribute("requests", requests);
+        // Update the requests of the other user
+        userStore.updateFriendRequests(other_user, requests);
+        // Update the friend lists of both users
+        userStore.updateFriends(this_user, friends);
+        userStore.updateFriends(other_user, other_friends);
         request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
     } 
     // Decline friend request
@@ -106,7 +110,8 @@ public class FriendServlet extends HttpServlet {
         ArrayList<User> requests = this_user.getRequests();
         // Remove from friend requests
         requests.remove(other_user);
-        request.setAttribute("requests", requests);
+        // Update the requests of the other user
+        userStore.updateFriendRequests(other_user, requests);
         request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
     }
   }

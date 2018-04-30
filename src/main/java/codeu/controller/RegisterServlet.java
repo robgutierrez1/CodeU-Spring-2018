@@ -76,7 +76,7 @@ public class RegisterServlet extends HttpServlet {
    }
 
    // Store the user in our backend
-   User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
+   User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now(), null, null);
    userStore.addUser(user);
 
    // Redirect to the login page so they may log in

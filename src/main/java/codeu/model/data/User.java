@@ -39,14 +39,25 @@ public class User {
    * @param name the username of this User
    * @param password the password of this User
    * @param creation the creation time of this User
+   * @param friends the friends list of this User
+   * @param requests the friend requests of this User
    */
-  public User(UUID id, String name, String password, Instant creation) {
+  public User(UUID id, String name, String password, Instant creation, ArrayList<User> friends, 
+                                                          ArrayList<User> requests) {
     this.id = id;
     this.name = name;
     this.hashedPassword = password;
     this.creation = creation;
-    this.friends = new ArrayList<User>();
-    this.requests = new ArrayList<User>();
+    if(friends == null) {
+      this.friends = new ArrayList<User>();
+    } else {
+      this.friends = friends;
+    }
+    if(requests == null) {
+      this.requests = new ArrayList<User>();
+    } else {
+      this.requests = requests;
+    }
   }
 
   /** Returns the ID of this User. */
