@@ -14,6 +14,7 @@
   limitations under the License.
 --%>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
@@ -33,6 +34,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       background-color: white;
       height: 500px;
       overflow-y: scroll
+    }
+    #orange {
+      background-color: orange; 
+      display: inline;
     }
   </style>
 
@@ -58,12 +63,46 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <div id="chat">
       <ul>
     <%
+      // go through first time to see what uses
+      ArrayList<String> texters = new ArrayList<String>();
+      for (Message message : messages) {
+         String author = UserStore.getInstance()
+          .getUser(message.getAuthorId()).getName();
+         if (!texters.contains(author)){
+            texters.add(author);
+          }
+      }
+    
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
     %>
-      <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+      <li><strong><%= author %>:</strong> <%
+        String rendered = message.getContent();                 
+        String[] breakdown = rendered.split("@");
+        if (breakdown != null && breakdown.length > 1){
+         %><%= breakdown[0] %>
+        <% for (int i = 1; i < breakdown.length; i++){
+            String[] atItem = breakdown[i].split(" ", 2);
+            if (texters.contains(atItem[0])){
+            %> 
+          <span id="orange"><%= atItem[0] %></span>
+            <% }
+               else{ %>
+                    @<%= atItem[0] %>  
+            <% }   
+               if (atItem.length >= 2){ %>
+                    <%= atItem[1] %>
+          <%
+                }
+            }
+                                             
+                                             %>
+        </li>
     <%
+        } else{%>
+            <%= rendered %>
+       <%}
       }
     %>
       </ul>
