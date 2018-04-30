@@ -116,18 +116,15 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-	System.out.println("doGet, userServlet");
 	String requestUrl = request.getRequestURI();
 	String userTitle = requestUrl.substring("/user/".length());
 	  
 	User user = userStore.getUser(userTitle);
     if (user == null) {
       // couldn't find user, redirect to home page (for now)
-      System.out.println("A in doget, userservlet: Name was null: " + userTitle);
       response.sendRedirect("/conversations");
       return;
     }
-    System.out.println("A in doget UserServlet: Name was NOT null: " + userTitle);
 
     String viewerName = (String) request.getSession().getAttribute("user");
     User viewer = userStore.getUser(viewerName);
@@ -157,13 +154,6 @@ public class UserServlet extends HttpServlet {
 		topTenList.add(userMessages.get(i));
 	}
 	
-	//String blobKeyStr = request.getParameter("blob-key");
-	//System.out.println("blobkeystr is:" + blobKeyStr);
-	//if(blobKeyStr != null){
-		//BlobKey blobKey = new BlobKey(blobKeyStr);
-    	//blobstoreService.serve(blobKey, response);
-	//}
-	
 	request.setAttribute("messages", topTenList);
 	
     request.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(request, response);
@@ -177,18 +167,15 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException{
-	System.out.println("doPost, userServlet");
 	String requestUrl = request.getRequestURI();
 	String userTitle = requestUrl.substring("/user/".length());
           
     User user = userStore.getUser(userTitle);
     if (user == null) {
       // couldn't find user, redirect to home page (for now)
-      System.out.println("in doPost, userservlet: Name was null: " + userTitle);
       response.sendRedirect("/");
       return;
     }
-	System.out.println("in doPost, UserServlet: Name was NOT null: " + userTitle);
 	String buttonVal = request.getParameter("buttonVal");
     String enteredAboutMe = request.getParameter("enteredAboutMe");
 	
@@ -216,19 +203,7 @@ public class UserServlet extends HttpServlet {
 		// default case: shouldn't reach here
 		System.out.println("Something went wrong...");
 	}
-	
-	//Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-    //List<BlobKey> blobKeys = blobs.get("myFile");
-
-	//String url = "";
-    //if (blobKeys == null || blobKeys.isEmpty()) {
-      //  url = "";
-    //} else {
-     //   url = "/serve?blob-key=" + blobKeys.get(0).getKeyString();
-    //}
-    //System.out.println("the url is:" + url);
-    // always redirect to the profile page, because redirecting is essentially refreshing
-	  
+ 
 	response.sendRedirect("/user/" + userTitle);
   }
 }

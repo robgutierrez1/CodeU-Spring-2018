@@ -101,7 +101,7 @@ public class PersistentStorageAgent {
   
   /** Update a User object's imageUrl to the Datastore service.*/
   public void updateImageUrl(User user, String imageUrl) {
-    persistentDataStore.updateAboutMe(user, imageUrl);
+    persistentDataStore.updateImageUrl(user, imageUrl);
   }
 
   /** Write a Message object to the Datastore service. */

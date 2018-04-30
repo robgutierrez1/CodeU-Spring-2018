@@ -40,31 +40,35 @@ public class Upload extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-		System.out.println("doPost, Upload");
-		String requestUrl = request.getRequestURI();
-		String userTitle = requestUrl.substring("/user/".length());
+		String username = request.getParameter("username");
         Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
         List<BlobKey> blobKeys = blobs.get("myFile");
 		String url = "";
 		
-        if (blobKeys == null || blobKeys.isEmpty()) {
-            System.out.println("blob key is null");
-        } else {
+        if (!(blobKeys == null || blobKeys.isEmpty())) {
         	url = "/serve?blob-key=" + blobKeys.get(0).getKeyString();
-        	System.out.println("!!!blob key is NOT null it is: " + url);
         }
         
-    	User user = userStore.getUser(userTitle);
+    	if (username == null) {
+      		// user is not logged in, don't let them create a conversation
+      		response.sendRedirect("/");
+      		return;
+   		}
+
+    	User user = userStore.getUser(username);
     	if (user == null) {
-     		// couldn't find user, redirect to home page (for now)
-     		System.out.println("in doPost, upload: Name was null: " + userTitle);
-      		response.sendRedirect("/serve?blob-key=" + blobKeys.get(0).getKeyString());
+      		// user was not found, don't let them create a conversation
+      		System.out.println("User not found: " + username);
+      		response.sendRedirect("/");
       		return;
     	}
-    	user.setImageUrl(url);
-    	userStore.updateImageUrl(user, url);
+    	
+    	if(url != ""){
+    		user.setImageUrl(url);
+    	    userStore.updateImageUrl(user, url);
+    	}
+
     	// redirect to the profile page, because redirecting is refreshing
-    	//response.sendRedirect("/user/" + userTitle);
-    	response.sendRedirect("/serve?blob-key=" + blobKeys.get(0).getKeyString());
+    	response.sendRedirect("/user/" + username);
     }
 }

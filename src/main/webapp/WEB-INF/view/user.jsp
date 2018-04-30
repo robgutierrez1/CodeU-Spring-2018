@@ -48,12 +48,21 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
 
       <h1><%= user.getName() %>'s Profile Page</h1>
       
-      Profile picture not set. <br />
-      <img src="<%=user.getImageUrl()%>" alt="profile image" width="500" height="377"> 
-      <form action="<%= blobstoreService.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
-      	<input type="file" name="myFile">
-        <input type="submit" value="Submit">
-    </form>
+      <% if (user.getImageUrl() != null) { %>
+      	 <img src="<%= user.getImageUrl() %>" alt="profile image" width="500" height="377"> 
+      <% } else { %>
+      	 <p>Profile picture not set.</p>
+      <% } %>
+      
+      <% if (user.equals(viewer)) { %>
+      	<form action="<%= blobstoreService.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+      		<input type="hidden" name="username" value="<%= user.getName() %>">
+      		<input type="file" name="myFile">
+        	<input type="submit" value="Submit">
+      	</form>
+      <% } else { %>
+            <!-- nothing -->
+      <% } %>
 
       <h2>My profile :) </h2>
 

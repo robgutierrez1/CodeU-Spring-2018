@@ -68,6 +68,8 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String aboutMe = (String) entity.getProperty("aboutme");
         String imageUrl = (String) entity.getProperty("imageUrl");
+        System.out.println("the imageUrl when loading all users is:" + imageUrl);
+        System.out.println("the user is:" + userName);
         User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
         users.add(user);
       } catch (Exception e) {
