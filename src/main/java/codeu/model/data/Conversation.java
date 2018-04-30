@@ -25,10 +25,10 @@ import java.time.format.DateTimeFormatter;
  * Class representing a conversation, which can be thought of as a chat room. Conversations are
  * created by a User and contain Messages.
  */
-public class Conversation extends Activity{
+public class Conversation {
   public final UUID id;
   public final UUID owner;
-  //public final Instant creation;
+  public final Instant creation;
   public final String title;
 
   /**
@@ -40,10 +40,10 @@ public class Conversation extends Activity{
    * @param creation the creation time of this Conversation
    */
   public Conversation(UUID id, UUID owner, String title, Instant creation){ 
-    super(creation, "Conversation");
+    //super(creation, "Conversation");
     this.id = id;
     this.owner = owner;
-    //this.creation = creation;
+    this.creation = creation;
     this.title = title;
   }
 
@@ -62,15 +62,15 @@ public class Conversation extends Activity{
     return title;
   }
 
-  /** Returns the creation time of this Conversation. 
+  /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
   }
 
-   Accepts and instant and returns a string of the formatted date 
+   /**Accepts and instant and returns a string of the formatted date */
    public String getDate(Instant time) {
     LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
     String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
     return formatted;
-  }*/
+  }
 }

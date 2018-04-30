@@ -16,6 +16,8 @@ import codeu.model.data.Activity;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /** Servlet Class responsible for the activity feed */
 public class ActivityServlet extends HttpServlet {
@@ -89,10 +91,27 @@ public class ActivityServlet extends HttpServlet {
         List<Conversation> conversations = conversationStore.getAllConversations();
         List<User> users = userStore.getAllUsers();
         List<Message> messages = messageStore.getAllMessages();
-        List<Activity> activities = activityStore.getAllActivities();
-        request.setAttribute("conversations", conversations);
-        request.setAttribute("users", users);
-        request.setAttribute("messages", messages);
+        List<Activity> activities = new ArrayList<Activity>();
+
+        for (Conversation conversation : conversations) {
+          Activity activity = new Activity(conversation.getCreationTime(), "conversation", conversation);
+          activities.add(activity);
+        }
+        for (Message message : messages) {
+          Activity activity = new Activity(message.getCreationTime(), "message", message);
+          activities.add(activity);
+        }
+        for (User user : users) {
+          Activity activity = new Activity(user.getCreationTime(), "user", user);
+          activities.add(activity);
+        }
+
+        //request.setAttribute("conversations", conversations);
+        //request.setAttribute("users", users);
+        //request.setAttribute("messages", messages);
+
+        Collections.sort(activities);
+        Collections.reverse(activities);
         request.setAttribute("activities", activities);
         request.getRequestDispatcher("/WEB-INF/view/activity.jsp").forward(request, response);
     }

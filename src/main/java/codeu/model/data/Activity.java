@@ -13,10 +13,12 @@ An activity can be a user, message, or conversation.  */
 public class Activity implements Comparable<Activity> {
   public final Instant creation;
   public final String type;
+  public final Object contents;
 
-public Activity(Instant creation, String type) {
+public Activity(Instant creation, String type, Object contents) {
     this.creation = creation;
     this.type = type;
+    this.contents = contents;
   }
 
   /** Returns the creation time of this activity. */
@@ -27,6 +29,10 @@ public Activity(Instant creation, String type) {
    /** Returns the type of activity. */
   public String getType() {
     return type;
+  }
+
+  public Object getContents() {
+    return contents;
   }
 
    /** Accepts and instant and returns a string of the formatted date */

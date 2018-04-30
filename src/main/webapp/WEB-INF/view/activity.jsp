@@ -57,53 +57,43 @@ ArrayList<Message> messagesArray = new ArrayList<Message>();
 
     <div id="activity">
         <ul>
-        <!-- Iterate through message list and get data of every message
-            to display on the activity feed -->
+        
         <%
-            for(Message message: messages) {
-                String author = UserStore.getInstance()
-                .getUser(message.getAuthorId()).getName();
-                String date = message.getDate(message.getCreationTime());
-                UUID ID = message.getConversationId();
-                String convo = ConversationStore.getInstance().findTitle(ID);
-                messagesArray.add(message);
-                //activityStore.addActivity(message);
-        %>  
-            <li><strong><%= date %>: </strong><%= author %> sent a message in <%= convo %>: 
-             "<%= message.getContent() %>"</li>
-        <%
-            }
-        %>
-        <!-- Iterate through conversation list and get data of every conversation to display -->
-        <%
-            for(Conversation conversation: conversations) {
-              String author = UserStore.getInstance()
-              .getUser(conversation.getOwnerId()).getName();
+          for (Activity activity : activities) {
+            if (activity.type == "conversation") {
+              Conversation conversation = (Conversation)activity.contents;
+
+              String author = UserStore.getInstance().getUser(conversation.getOwnerId()).getName();
               String date = conversation.getDate(conversation.getCreationTime());
               String convo = conversation.getTitle();
-              conversationsArray.add(conversation);
-              //activityStore.addActivity(conversation);
         %>
-              <li><strong><%= date %>: </strong><%= author %> created a new conversation: 
-              <%= convo %></li>
+              <li><strong><%= date %>: </strong><%= author %> created a new conversation: <%= convo %></li>
+        <%    
+            }
+
+            else if (activity.type == "message") {
+              Message message = (Message)activity.contents;
+
+              String author = UserStore.getInstance().getUser(message.getAuthorId()).getName();
+              String date = message.getDate(message.getCreationTime());
+              UUID ID = message.getConversationId();
+              String convo = ConversationStore.getInstance().findTitle(ID);
+        %>
+               <li><strong><%= date %>: </strong><%= author %> sent a message in <%= convo %>: "<%= message. getContent() %>"</li>
         <%
           }
+            else if (activity.type == "user") {
+            User user = (User)activity.contents;
+
+            String author = user.getName();
+            String date = user.getDate(user.getCreationTime());
         %>
-        <!-- Iterate through user list and get data of every user to display -->
-        <%
-            for(User user: users) {
-              String author = user.getName();
-              String date = user.getDate(user.getCreationTime());
-              usersArray.add(user);
-              //activityStore.addActivity(user);
-        %>     
-              <li><strong><%= date %>: </strong><%= author %> joined!</li>
+            <li><strong><%= date %>: </strong><%= author %> joined!</li>
         <%
           }
+        }
+
         %>
-
-
-        
 
       
      
