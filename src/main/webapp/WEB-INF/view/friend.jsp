@@ -49,18 +49,22 @@
         <div id="friend">
             <ul>
                 <%
-                if(requests != null) {
-                    for(User user: requests) {
-                        String name = user.getName();
+                    if(requests != null) {
+                        for(int i = 0; i < requests.size(); i++) {
+                            User user = requests.get(i);
+                            String name = user.getName();
+                        
                 %>
-                    <form action="/friend" method="POST">
-                        <li><strong><%= name %> wants to be your friend!</strong></li>
-                        <input type="submit" name="add" value="Accept"/>
-                        <input type="submit" name="remove" value="Decline"/>
-                    </form>
+                        <form action="/friend" method="POST">
+                            <li><strong><%= name %> wants to be your friend!</strong></li>
+                            <input type="submit" name="accept" value="accept"/>
+                            <input type="hidden" name="store_user" value=<%= name %>/>
+                            <input type="submit" name="decline" value="decline"/>
+                        </form>
                 <%
+                        }
                     }
-                }
+                %>
             </ul>
         </div>
 
