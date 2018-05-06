@@ -82,6 +82,7 @@ public class User {
     return hashedPassword;
   }
 
+
   /** Returns the creation time of this User. */
   public Instant getCreationTime() {
     return creation;

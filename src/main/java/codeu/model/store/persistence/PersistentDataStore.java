@@ -71,6 +71,10 @@ public class PersistentDataStore {
         System.out.println("the imageUrl when loading all users is:" + imageUrl);
         System.out.println("the user is:" + userName);
         User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
+
+        if (aboutMe == null){
+          aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
+        }
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
