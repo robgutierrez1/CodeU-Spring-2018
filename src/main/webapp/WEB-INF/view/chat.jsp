@@ -17,9 +17,12 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
 
 <!DOCTYPE html>
@@ -76,6 +79,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
         <input type="text" name="message">
         <br/>
         <button type="submit">Send</button>
+    </form>
+    <form action="<%= blobstoreService.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+      		<input type="file" name="myFile">
+        	<input type="submit" value="Submit">
     </form>
     <% } else { %>
       <p><a href="/login">Login</a> to send a message.</p>
