@@ -1,8 +1,16 @@
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.time.Instant;
 import codeu.model.data.User;
+import codeu.model.data.Message;
+import codeu.model.data.Conversation;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.MessageStore;
+
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -65,12 +73,47 @@ public class messageUpload extends HttpServlet {
     	}
     	*/
     	
+    	String username = (String) request.getSession().getAttribute("user");
+    	if (username == null) {
+      		// user is not logged in, don't let them add a message
+      		response.sendRedirect("/login");
+      		return;
+    	}
+
+    	User user = userStore.getUser(username);
+    	if (user == null) {
+      		// user was not found, don't let them add a message
+      		response.sendRedirect("/login");
+      		return;
+    	}
+
+    	String requestUrl = request.getRequestURI();
+    	String conversationTitle = requestUrl.substring("/chat/".length());
+
+    	Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
+    	if (conversation == null) {
+      		// couldn't find conversation, redirect to conversation list
+      		response.sendRedirect("/conversations");
+      		return;
+    	}
+    	
     	if(url != ""){
     		System.out.println("the url is:" + url);
     	}
+    	
+    	Message message =
+        new Message(
+            UUID.randomUUID(),
+            conversation.getId(),
+            user.getId(),
+            url,
+            Instant.now(),
+            "image");
+
+    	messageStore.addMessage(message);
 		
 		
-    	// redirect to the profile page, because redirecting is refreshing
-    	response.sendRedirect("/user/" + username);
+    	// redirect to a GET request
+    	response.sendRedirect("/chat/" + conversationTitle);
     }
 }
