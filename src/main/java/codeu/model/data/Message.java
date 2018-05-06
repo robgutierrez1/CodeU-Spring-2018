@@ -16,6 +16,11 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+// Added for time/date
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 /** Class representing a message. Messages are sent by a User in a Conversation. */
 public class Message {
@@ -37,6 +42,7 @@ public class Message {
    * @param creation the creation time of this Message
    */
   public Message(UUID id, UUID conversation, UUID author, String content, Instant creation) {
+    //super(creation, "Message");
     this.id = id;
     this.conversation = conversation;
     this.author = author;
@@ -69,6 +75,12 @@ public class Message {
   public Instant getCreationTime() {
     return creation;
   }
+
+  /** Accepts and instant and returns a string of the formatted date */
+  public String getDate(Instant time) {
+    LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
+    String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
+    return formatted;
   
   public boolean getOpenToPublic() {
 	  return openToPublic;
