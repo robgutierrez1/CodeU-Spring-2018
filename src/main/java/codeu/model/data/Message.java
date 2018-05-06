@@ -30,6 +30,7 @@ public class Message {
   private final UUID author;
   private final String content;
   private final Instant creation;
+  private boolean openToPublic;
 
   /**
    * Constructs a new Message.
@@ -47,6 +48,7 @@ public class Message {
     this.author = author;
     this.content = content;
     this.creation = creation;
+    openToPublic = true;
   }
 
   /** Returns the ID of this Message. */
@@ -79,5 +81,11 @@ public class Message {
     LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
     String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
     return formatted;
+  
+  public boolean getOpenToPublic() {
+	  return openToPublic;
+  }
+  public void setOpenToPublic(boolean openToPublic) {
+	  this.openToPublic = openToPublic;
   }
 }
