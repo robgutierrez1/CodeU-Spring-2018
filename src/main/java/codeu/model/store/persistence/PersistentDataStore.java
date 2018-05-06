@@ -67,10 +67,14 @@ public class PersistentDataStore {
         String password = (String) entity.getProperty("password");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String aboutMe = (String) entity.getProperty("aboutme");
+        String imageUrl = (String) entity.getProperty("imageUrl");
+        System.out.println("the imageUrl when loading all users is:" + imageUrl);
+        System.out.println("the user is:" + userName);
+        User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
+
         if (aboutMe == null){
           aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
         }
-        User user = new User(uuid, userName, password, creationTime, aboutMe);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -170,6 +174,20 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         if (uuid.equals(user.getId())) {
           entity.setProperty("aboutme", aboutMe);
+          datastore.put(entity);
+        }
+    }
+  }
+  
+  /** Update a User object's imageUrl to the Datastore service.*/
+  public void updateImageUrl(User user, String imageUrl) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+      
+    for (Entity entity : results.asIterable()) {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        if (uuid.equals(user.getId())) {
+          entity.setProperty("imageUrl", imageUrl);
           datastore.put(entity);
         }
     }

@@ -25,6 +25,7 @@ public class Message {
   private final UUID author;
   private final String content;
   private final Instant creation;
+  private boolean openToPublic;
 
   /**
    * Constructs a new Message.
@@ -41,6 +42,7 @@ public class Message {
     this.author = author;
     this.content = content;
     this.creation = creation;
+    openToPublic = true;
   }
 
   /** Returns the ID of this Message. */
@@ -66,5 +68,12 @@ public class Message {
   /** Returns the creation time of this Message. */
   public Instant getCreationTime() {
     return creation;
+  }
+  
+  public boolean getOpenToPublic() {
+	  return openToPublic;
+  }
+  public void setOpenToPublic(boolean openToPublic) {
+	  this.openToPublic = openToPublic;
   }
 }

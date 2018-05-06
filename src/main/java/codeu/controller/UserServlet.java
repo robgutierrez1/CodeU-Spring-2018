@@ -23,12 +23,18 @@ import codeu.model.store.basic.MessageStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 /** Servlet class responsible for the user page. */
 public class UserServlet extends HttpServlet {
@@ -44,6 +50,12 @@ public class UserServlet extends HttpServlet {
   
   /** Checks whether the user is editing about me*/
   private Boolean editAboutMe = false;
+  
+  /** List of User Messages related to this user*/
+  private List<Message> userMessages;
+  
+  /** Blobstore that stores a map of blob keys and the url for image storage*/
+  private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
   /**
    * Set up state for handling user-related and conversation-related requests. This method 
@@ -104,16 +116,14 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+	  String requestUrl = request.getRequestURI();
+	  String userTitle = requestUrl.substring("/user/".length());
 	  
-    String requestUrl = request.getRequestURI();
-	String userTitle = requestUrl.substring("/user/".length());
-	  
-	User user = userStore.getUser(userTitle);
+	  User user = userStore.getUser(userTitle);
     if (user == null) {
-        // couldn't find user, redirect to home page (for now)
-        System.out.println("Name was null: " + userTitle);
-        response.sendRedirect("/");
-        return;
+      // couldn't find user, redirect to home page (for now)
+      response.sendRedirect("/conversations");
+      return;
     }
 
     String viewerName = (String) request.getSession().getAttribute("user");
@@ -125,12 +135,26 @@ public class UserServlet extends HttpServlet {
     request.setAttribute("aboutMe", aboutMe);
 	
 	List<Conversation> userConversations = getUserConversations(user);
-	List<Message> userMessages = new ArrayList<Message>();
+	userMessages = new ArrayList<Message>();
 	for (Conversation conversation: userConversations) {
 	    List<Message> messages = messageStore.getMessagesInConversation(conversation.getId());
 	    userMessages.addAll(messages);
 	}
-	request.setAttribute("messages", userMessages);
+	
+	// added to sort userMessages
+	Collections.sort(userMessages, new Comparator<Message>() {
+		@Override
+		public int compare(Message o1, Message o2) {
+			return o2.getCreationTime().compareTo(o1.getCreationTime());
+		}
+	});
+	
+	List<Message> topTenList = new ArrayList<Message>();
+	for (int i = 0; i < userMessages.size() && i < 10; i++) {
+		topTenList.add(userMessages.get(i));
+	}
+	
+	request.setAttribute("messages", topTenList);
 	
     request.getRequestDispatcher("/WEB-INF/view/user.jsp").forward(request, response);
   }
@@ -143,38 +167,44 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException{
-	  
-	  String requestUrl = request.getRequestURI();
-	  String userTitle = requestUrl.substring("/user/".length());
-          
+    String requestUrl = request.getRequestURI();
+    String userTitle = requestUrl.substring("/user/".length());
+
       User user = userStore.getUser(userTitle);
       if (user == null) {
-          // couldn't find user, redirect to home page (for now)
-          System.out.println("Name was null: " + userTitle);
-          response.sendRedirect("/");
-          return;
+        // couldn't find user, redirect to home page (for now)
+        response.sendRedirect("/");
+        return;
       }
-	
-	  String buttonVal = request.getParameter("buttonVal");
+    String buttonVal = request.getParameter("buttonVal");
       String enteredAboutMe = request.getParameter("enteredAboutMe");
-	
-	  if (buttonVal.equals("edit")) {
-		  editAboutMe = true;
-		  System.out.println("Edit!");
-	  } else if (buttonVal.equals("cancel")) {
-		  editAboutMe = false;
-		  System.out.println("Cancel!");
-	  } else if (buttonVal.equals("submit")){
-		  editAboutMe = false; // finish editing
+
+    if(buttonVal == null){
+      System.out.println("not updating aboutme");
+    }
+    else if (buttonVal.equals("edit")) {
+      editAboutMe = true;
+      System.out.println("Edit!");
+    } else if (buttonVal.equals("cancel")) {
+      editAboutMe = false;
+      System.out.println("Cancel!");
+    } else if (buttonVal.equals("submit")){
+      editAboutMe = false; // finish editing
           user.setAboutMe(enteredAboutMe);
           userStore.updateAboutMe(user, enteredAboutMe);
-		  System.out.println("Submit!");
-	 } else {
-		  // default case: shouldn't reach here
-		  System.out.println("Something went wrong...");
-	 }
-	  
-	 response.sendRedirect("/user/" + userTitle);
+      System.out.println("Submit!");
+    } else if(buttonVal.contains("hide")) {
+      int orderOfMessage = Integer.parseInt(buttonVal.substring(4));
+      userMessages.get(orderOfMessage).setOpenToPublic(false);
+    } else if(buttonVal.contains("show")) {
+      int orderOfMessage = Integer.parseInt(buttonVal.substring(4));
+      userMessages.get(orderOfMessage).setOpenToPublic(true);
+    } else {
+      // default case: shouldn't reach here
+      System.out.println("Something went wrong...");
+    }
+
+    response.sendRedirect("/user/" + userTitle);
   }
 }
 

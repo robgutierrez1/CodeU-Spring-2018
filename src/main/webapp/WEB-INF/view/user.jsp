@@ -15,12 +15,15 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%
 User user = (User) request.getAttribute("user");
 User viewer = (User) request.getAttribute("viewer");
 Boolean editAboutMe = (Boolean) request.getAttribute("editAboutMe");
 Boolean updateAboutMe = (Boolean) request.getAttribute("updateAboutMe");
 List<Message> userMessages = (List<Message>) request.getAttribute("messages");
+BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
 
 <!DOCTYPE html>
@@ -44,6 +47,23 @@ List<Message> userMessages = (List<Message>) request.getAttribute("messages");
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
       <h1><%= user.getName() %>'s Profile Page</h1>
+      
+      <% if (user.getImageUrl() != null) { %>
+      	 <img src="<%= user.getImageUrl() %>" alt="profile image" width="500" height="377"> 
+      <% } else { %>
+      	 <p>Profile picture not set.</p>
+      <% } %>
+      
+      <% if (user.equals(viewer)) { %>
+      	<form action="<%= blobstoreService.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+      		<input type="hidden" name="username" value="<%= user.getName() %>">
+      		<input type="file" name="myFile">
+        	<input type="submit" value="Submit">
+      	</form>
+      <% } else { %>
+            <!-- nothing -->
+      <% } %>
+
       <h2>My profile :) </h2>
 
       <div>
@@ -70,12 +90,29 @@ List<Message> userMessages = (List<Message>) request.getAttribute("messages");
       <div
       style="overflow: auto; height: 300px; background-color: white;">
 
-      <% for (Message message: userMessages) { %>
-        <ul 
-        style="margin: 10px;">
-        	<li><b><%= message.getCreationTime()%></b> : <%= message.getContent() %></li>
+      <ul style="margin: 10px;">
+      <% int i = 0; 
+         for (Message message: userMessages) { 
+            if (message.getOpenToPublic()){%>
+                
+                    <li><b><%= message.getCreationTime()%></b> : <%= message.getContent() %>
+                <% if (user.equals(viewer)) { %>
+                        <form action="/user/<%= user.getName() %>" method="POST">
+                        <button type="submit" name = "buttonVal" value = "hide<%=i%>">Hide</button>
+                <% } %>
+                    </li>
+        <% } else {
+                if (user.equals(viewer)) { %>
+                        <form action="/user/<%= user.getName() %>" method="POST">
+                        <li><button type="submit" name = "buttonVal" value = "show<%=i%>">show the hidden message</button></li>
+                <% }
+            }
+           
+           
+           i++;
+                
+        }%>
         </ul>
-        <% } %>
         
       </div>
     </div>

@@ -24,6 +24,7 @@ public class User {
   private final String hashedPassword;
   private final Instant creation;
   private String aboutMe;
+  private String imageUrl;
 
   /**
    * Constructs a new User.
@@ -31,6 +32,8 @@ public class User {
    * @param id the ID of this User
    * @param name the username of this User
    * @param password the password of this User
+   * @param creation the creation time of this User
+   * @param creation the creation time of this User
    * @param creation the creation time of this User
    */
   public User(UUID id, String name, String password, Instant creation) {
@@ -41,6 +44,7 @@ public class User {
     
     // added aboutMe
     this.aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
+    this.imageUrl = "";
   }
     
   /**
@@ -52,12 +56,13 @@ public class User {
    * @param creation the creation time of this User
    * @param aboutMe the about me/bio of this User
    */
-   public User(UUID id, String name, String password, Instant creation, String aboutMe) {
+   public User(UUID id, String name, String password, Instant creation, String aboutMe, String imageUrl) {
      this.id = id;
      this.name = name;
      this.password = password;
      this.creation = creation;
      this.aboutMe = aboutMe;
+     this.imageUrl = imageUrl;
    }
 
   /** Returns the ID of this User. */
@@ -93,5 +98,17 @@ public class User {
    */
   public void setAboutMe(String aboutMe) {
     this.aboutMe = aboutMe;
+  }
+  
+  /** Returns the imageUrl of this User. */
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  /**
+   * Sets the imageUrl of this User.
+   */
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 }
