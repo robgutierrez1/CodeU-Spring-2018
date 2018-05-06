@@ -64,7 +64,7 @@ public class User {
    public User(UUID id, String name, String password, Instant creation, String aboutMe, String imageUrl) {
      this.id = id;
      this.name = name;
-     this.password = password;
+     this.hashedPassword = password;
      this.creation = creation;
      this.aboutMe = aboutMe;
      this.imageUrl = imageUrl;
