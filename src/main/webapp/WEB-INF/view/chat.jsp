@@ -81,6 +81,7 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
         <button type="submit">Send</button>
     </form>
     <form action="<%= blobstoreService.createUploadUrl("/messageUpload") %>" method="post" enctype="multipart/form-data">
+      		<input type="hidden" name="conversationTitle" value="<%= conversation.getTitle() %>">
       		<input type="file" name="myFile">
         	<input type="submit" value="Submit">
     </form>
