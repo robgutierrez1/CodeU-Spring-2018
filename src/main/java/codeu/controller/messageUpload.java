@@ -118,7 +118,6 @@ public class messageUpload extends HttpServlet {
     		messageStore.addMessage(message);
     	}
 		
-		System.out.println("Reached the end of doPost!");
     	// redirect to a GET request
     	response.sendRedirect("/chat/" + conversationTitle);
     }

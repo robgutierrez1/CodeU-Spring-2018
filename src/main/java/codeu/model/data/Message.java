@@ -62,7 +62,7 @@ public class Message {
     this.author = author;
     this.content = content;
     this.creation = creation;
-    this.type = null;
+    this.type = "default";
   }
 
   /** Returns the ID of this Message. */
