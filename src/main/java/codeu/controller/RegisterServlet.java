@@ -9,6 +9,7 @@ import codeu.model.store.basic.UserStore;
 import codeu.model.data.User;
 import java.time.Instant;
 import java.util.UUID;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
 * Servlet class responsible for user registration.
@@ -54,6 +55,7 @@ public class RegisterServlet extends HttpServlet {
  throws IOException, ServletException {
    String username = request.getParameter("username");
    String password = request.getParameter("password");
+   String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
    // Checks to see if username is valid
    // Currently accepts asterisks!
@@ -74,7 +76,7 @@ public class RegisterServlet extends HttpServlet {
    }
 
    // Store the user in our backend
-   User user = new User(UUID.randomUUID(), username, password, Instant.now());
+   User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
    userStore.addUser(user);
 
    // Redirect to the login page so they may log in
