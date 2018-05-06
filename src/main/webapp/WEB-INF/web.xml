@@ -116,4 +116,14 @@
     <url-pattern>/activity</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>AccessServlet</servlet-name>
+    <servlet-class>codeu.controller.AccessServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>AccessServlet</servlet-name>
+    <url-pattern>/access</url-pattern>
+  </servlet-mapping>
+
 </web-app>

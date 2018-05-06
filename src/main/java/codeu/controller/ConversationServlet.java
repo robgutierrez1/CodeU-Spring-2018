@@ -125,7 +125,8 @@ public class ConversationServlet extends HttpServlet {
     //Activity activity = new Activity(Instant.now(), "Conversation");    
     
     conversationStore.addConversation(conversation);
-    //activityStore.addActivity(conversation);
-    response.sendRedirect("/chat/" + conversationTitle);
+    request.setAttribute("conversation", conversation);
+    request.getRequestDispatcher("AccessServlet.java").forward(request, response);
+    response.sendRedirect("/access");
   }
 }

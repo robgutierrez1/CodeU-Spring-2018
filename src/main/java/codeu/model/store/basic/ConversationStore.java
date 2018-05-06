@@ -107,6 +107,13 @@ public class ConversationStore {
     persistentStorageAgent.writeThrough(conversation);
   }
 
+  /** Access the current set of members within the given Conversation. */
+  public List<UUID> getMembersInConversation(Conversation conversation) {
+    List<UUID> membersInConversation = new ArrayList<>();
+    membersInConversation = conversation.getMembers();
+    return membersInConversation;
+  }
+
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
     // This approach will be pretty slow if we have many Conversations.
