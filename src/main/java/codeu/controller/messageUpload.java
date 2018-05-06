@@ -13,7 +13,7 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
-public class Upload extends HttpServlet {
+public class messageUpload extends HttpServlet {
     private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	
 	/** Store class that gives access to Users. */
@@ -44,11 +44,12 @@ public class Upload extends HttpServlet {
         Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
         List<BlobKey> blobKeys = blobs.get("myFile");
 		String url = "";
-		/**
+
         if (!(blobKeys == null || blobKeys.isEmpty())) {
-        	url = "/serve?blob-key=" + blobKeys.get(0).getKeyString();
+        	url = "/messageServe?blob-key=" + blobKeys.get(0).getKeyString();
         }
         
+        /**
     	if (username == null) {
       		// user is not logged in, don't let them create a conversation
       		response.sendRedirect("/");
@@ -62,12 +63,13 @@ public class Upload extends HttpServlet {
       		response.sendRedirect("/");
       		return;
     	}
+    	*/
     	
     	if(url != ""){
-    		user.setImageUrl(url);
-    	    userStore.updateImageUrl(user, url);
+    		System.out.println("the url is:" + url);
     	}
-		*/
+		
+		
     	// redirect to the profile page, because redirecting is refreshing
     	response.sendRedirect("/user/" + username);
     }
