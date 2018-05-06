@@ -64,9 +64,24 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+        if (message.getType() == null){
+        	System.out.println("type is null!");
     %>
-      <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+      		<!-- nothing -->
     <%
+      	} else if (message.getType().equals("Image")) {
+      		System.out.println("type is image");
+    %>
+    		<li><strong><%= author %>:</strong> 
+    		<img src="<%= message.getContent() %>" alt="profile image" width=100% height=100%> </li>
+    		
+    <%  
+        } else if (message.getType().equals("Text")){ 
+        	System.out.println("type is text");
+    %>
+    		<li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+    <%
+    	}
       }
     %>
       </ul>
