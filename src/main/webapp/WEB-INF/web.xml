@@ -104,6 +104,34 @@
   <servlet-mapping>
     <servlet-name>messageUpload</servlet-name>
     <url-pattern>/messageUpload</url-pattern>
+
+    <servlet-name>Serve</servlet-name>
+    <servlet-class>Serve</servlet-class>
+  </servlet>
+ 
+  <servlet-mapping>
+    <servlet-name>Serve</servlet-name>
+    <url-pattern>/serve</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Upload</servlet-name>
+    <servlet-class>Upload</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Upload</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ActivityServlet</servlet-name>
+    <servlet-class>codeu.controller.ActivityServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ActivityServlet</servlet-name>
+    <url-pattern>/activity</url-pattern>
   </servlet-mapping>
 
 </web-app>
