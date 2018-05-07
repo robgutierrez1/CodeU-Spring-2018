@@ -16,9 +16,11 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%
+User viewer = (User) request.getAttribute("viewer");
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
 %>
@@ -54,6 +56,15 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   <%@ include file="/navbar.html" %>
 
   <div id="container">
+      
+    <%
+       if (viewer != null && viewer.getNotify() != null && !viewer.getNotify().isEmpty()){
+       %><p>You got a notification! </p><%
+       } else{
+       %><p>No notifications yet... </p><%                            
+       }
+       
+    %>
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
