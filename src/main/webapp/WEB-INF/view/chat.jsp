@@ -86,7 +86,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
             String[] atItem = breakdown[i].split(" ", 2);
             if (texters.contains(atItem[0])){
             %> 
-          <span id="orange"><%= atItem[0] %></span>
+          <span id="orange">@<%= atItem[0] %></span>
             <% }
                else{ %>
                     @<%= atItem[0] %>  
