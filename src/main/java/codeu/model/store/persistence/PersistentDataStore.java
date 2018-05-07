@@ -189,6 +189,7 @@ public class PersistentDataStore {
     for(Entity entity: results.asIterable()) {
       UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
       if(uuid.equals(other_user.getId())) {
+        // Might be source of error. PropertyContainer doesn't know what user is?
         entity.setProperty("requests", requests);
         datastore.put(entity);
       }
@@ -203,6 +204,7 @@ public class PersistentDataStore {
     for(Entity entity: results.asIterable()) {
       UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
       if(uuid.equals(this_user.getId())) {
+        // Same case here?
         entity.setProperty("friends", friends);
         datastore.put(entity);
       }

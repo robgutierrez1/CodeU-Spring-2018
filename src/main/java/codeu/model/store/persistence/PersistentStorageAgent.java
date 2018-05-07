@@ -106,10 +106,12 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(message);
   }
 
+  /** Update the request list for the other user */
   public void updateRequests(User other_user, ArrayList<User> requests) {
     persistentDataStore.updateRequests(other_user, requests);
   }
 
+  /** Update the friends list for this user */
   public void updateFriends(User this_user, ArrayList<User> friends) {
     persistentDataStore.updateFriends(this_user, friends);
   }

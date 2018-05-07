@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import codeu.model.data.User;
 
 /** Class representing a registered user. */
 public class User {
