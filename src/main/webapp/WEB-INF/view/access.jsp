@@ -26,6 +26,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+
+<% 
+String conversationTitle = (String)request.getAttribute("conversationTitle");
+String chatURL = (String)request.getAttribute("chatURL");
+Conversation conversation = ConversationStore.getInstance().getConversationWithTitle(conversationTitle);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,13 +50,14 @@
 
     <% if(request.getSession().getAttribute("user") != null){ %>
       <h1>Add Members</h1>
-      <form action="/access" method="POST">
+      <form action="/access/<%= conversation.getTitle() %>" method="POST">
           <div class="form-group">
             <label class="form-control-label">Add a user to your conversation:</label>
           <input type="text" name="userToAdd">
         </div>
 
-        <button type="submit">Add user</button>
+        <button type="submit" name = "buttonVal" value = "add">Add user</button>
+        <button type="submit" name = "buttonVal" value = "chat">Go to Chat</button>
       </form>
 
       <hr/>
@@ -80,8 +87,12 @@
         </ul>
       <%
       }
+
       %>
     <hr/>
+
+
+
     
   </div>
 </body>

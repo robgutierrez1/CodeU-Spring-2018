@@ -125,15 +125,10 @@ public class ConversationServlet extends HttpServlet {
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
 
-    //String conversationTitle = conversation.getTitle();
-
-    //Activity activity = new Activity(Instant.now(), "Conversation");    
+    String convoTitle = conversation.getTitle();
+    
     
     conversationStore.addConversation(conversation);
-    //request.setAttribute("conversation", conversation);
-    //request.getRequestDispatcher("/AccessServlet.java").forward(request, response);
-    //ServletContext context = getServletContext();
-    //context.setAttribute("conversation", conversation);
-    response.sendRedirect("/access/" + conversationTitle);
+    response.sendRedirect("/access/" + convoTitle);
   }
 }

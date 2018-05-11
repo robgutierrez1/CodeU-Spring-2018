@@ -116,9 +116,7 @@ public class ConversationStore {
 
   /** Add a new member to the current set of members in the conversation. */
   public void addMember(Conversation conversation, UUID member) {
-    List<UUID> membersInConversation = new ArrayList<>();
-    membersInConversation = conversation.getMembers();
-    membersInConversation.add(member);
+    conversation.members.add(member);
     persistentStorageAgent.writeThrough(conversation);
   }
 
