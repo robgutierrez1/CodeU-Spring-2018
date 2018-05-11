@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Class representing a conversation, which can be thought of as a chat room. Conversations are
@@ -47,7 +49,7 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
-    this.members = null;
+    this.members = new ArrayList<UUID>(Arrays.asList(owner));
     //this.members.add(owner);
   }
 

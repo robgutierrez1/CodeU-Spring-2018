@@ -28,6 +28,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;  
+import javax.servlet.*;  
+import javax.servlet.http.*;  
 
 /** Servlet class responsible for the conversations page. */
 public class ConversationServlet extends HttpServlet {
@@ -122,11 +125,15 @@ public class ConversationServlet extends HttpServlet {
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
 
+    //String conversationTitle = conversation.getTitle();
+
     //Activity activity = new Activity(Instant.now(), "Conversation");    
     
     conversationStore.addConversation(conversation);
-    request.setAttribute("conversation", conversation);
-    request.getRequestDispatcher("AccessServlet.java").forward(request, response);
-    response.sendRedirect("/access");
+    //request.setAttribute("conversation", conversation);
+    //request.getRequestDispatcher("/AccessServlet.java").forward(request, response);
+    //ServletContext context = getServletContext();
+    //context.setAttribute("conversation", conversation);
+    response.sendRedirect("/access/" + conversationTitle);
   }
 }

@@ -114,6 +114,14 @@ public class ConversationStore {
     return membersInConversation;
   }
 
+  /** Add a new member to the current set of members in the conversation. */
+  public void addMember(Conversation conversation, UUID member) {
+    List<UUID> membersInConversation = new ArrayList<>();
+    membersInConversation = conversation.getMembers();
+    membersInConversation.add(member);
+    persistentStorageAgent.writeThrough(conversation);
+  }
+
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
     // This approach will be pretty slow if we have many Conversations.

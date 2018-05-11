@@ -16,6 +16,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;  
+import javax.servlet.*;  
+import javax.servlet.http.*;  
 
 /** Servlet class responsible for the page to add people to a conversation. */
 public class AccessServlet extends HttpServlet {
@@ -79,8 +82,14 @@ public class AccessServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-        Conversation conversation = (Conversation)request.getAttribute("conversation");
+        //Conversation conversation = (Conversation) request.getAttribute("conversation");
+        String requestUrl = request.getRequestURI();
+        String conversationTitle = requestUrl.substring("/access/".length());
+
+        Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
         List<UUID> members = conversationStore.getMembersInConversation(conversation);
+        
+        request.setAttribute("conversation", conversation);
         request.setAttribute("members", members);
         //List<Conversation> conversations = conversationStore.getAllConversations();
         //request.setAttribute("conversations", conversations);
@@ -88,49 +97,45 @@ public class AccessServlet extends HttpServlet {
   }
 
   /**
-   * This function fires when a user submits the form on the conversations page. It gets the
-   * logged-in username from the session and the new conversation title from the submitted form
-   * data. It uses this to create a new Conversation object that it adds to the model.
+   * This function fires when a user submits the form on the memebers page. It gets the
+   * logged-in username from the session and the name of the user they want to add from the submitted form
+   * data. It uses this to add the user to the list of members for the conversation.
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    //     String username = (String) request.getSession().getAttribute("user");
-    // if (username == null) {
-    //   // user is not logged in, don't let them create a conversation
-    //   response.sendRedirect("/conversations");
-    //   return;
-    // }
+        String username = (String) request.getSession().getAttribute("user");
+        if (username == null) {
+          // user is not logged in, don't let them create a conversation
+          response.sendRedirect("/conversations");
+          return;
+        }
 
-    // User user = userStore.getUser(username);
-    // if (user == null) {
-    //   // user was not found, don't let them create a conversation
-    //   System.out.println("User not found: " + username);
-    //   response.sendRedirect("/access");
-    //   return;
-    // }
+        User user = userStore.getUser(username);
+        if (user == null) {
+          // user was not found, don't let them create a conversation
+          System.out.println("User not found: " + username);
+          response.sendRedirect("/conversations");
+          return;
+        }
 
-    // String conversationTitle = request.getParameter("conversationTitle");
-    // if (!conversationTitle.matches("[\\w*]*")) {
-    //   request.setAttribute("error", "Please enter only letters and numbers.");
-    //   request.getRequestDispatcher("/WEB-INF/view/access.jsp").forward(request, response);
-    //   return;
-    // }
+        //String requestUrl = request.getRequestURI();
+        //String conversationTitle = requestUrl.substring("/access/".length());
+        //Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
 
-    // if (conversationStore.isTitleTaken(conversationTitle)) {
-    //   // conversation title is already taken, just go into that conversation instead of creating a
-    //   // new one
-    //   response.sendRedirect("/chat/" + conversationTitle);
-    //   return;
-    // }
-    //     // String username = (String) request.getSession().getAttribute("user");
-    //     // if (username == null) {
-    //     //   // user is not logged in, don't let them create a conversation
-    //     //   response.sendRedirect("/conversations");
-    //     //   return;
-    //     //}
+        String userToAdd = request.getParameter("userToAdd");
+        User newMember = userStore.getUser(userToAdd);
+        if (user == null) {
+          // couldn't find user with that username
+          System.out.println("User not found: " + userToAdd);
+          return;
+        }
 
+
+        UUID newMemberId = userStore.getUserId(userToAdd);
+        //conversationStore.addMember(conversation, newMemberId); 
     
-    response.sendRedirect("/access");
+        response.sendRedirect("/access/");
+        // + conversationTitle);
   }
 }

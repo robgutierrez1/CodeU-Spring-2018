@@ -123,7 +123,7 @@
 
   <servlet-mapping>
     <servlet-name>AccessServlet</servlet-name>
-    <url-pattern>/access</url-pattern>
+    <url-pattern>/access/*</url-pattern>
   </servlet-mapping>
 
 </web-app>
