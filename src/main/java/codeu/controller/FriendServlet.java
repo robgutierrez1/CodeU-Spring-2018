@@ -67,20 +67,36 @@ public class FriendServlet extends HttpServlet {
             User other_user = userStore.getUser(username);
             // Find out which user sent the friend request
             String this_user_name = (String) request.getSession().getAttribute("user");
-            // User this_user = userStore.getUser(this_user_name);
-            // Add user to friend requests of potential friend
-            ArrayList<String> requests = other_user.getRequests();
-            requests.add(this_user_name);
-            // Update the requests of the other user
-            userStore.updateFriendRequests(other_user, requests);
-            request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
+            ArrayList<String> friends = other_user.getFriends();
+            // Not already friends
+            if(!friends.contains(this_user_name)) {
+                // Add user to friend requests of potential friend
+                ArrayList<String> requests = other_user.getRequests();
+                // Not in friend request list
+                if(!requests.contains(this_user_name)) {
+                    requests.add(this_user_name);
+                    // Update the requests of the other user
+                    userStore.updateFriendRequests(other_user, requests);
+                    request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
+                }
+                // Already sent a friend request
+                else {
+                    request.setAttribute("error", "You already sent them a friend request!");
+                    request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
+                }
+            }
+            // Already friends
+            else {
+                request.setAttribute("error", "You are already friends!!");
+                    request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
+            }
         }
         // User not found
         else {
         request.setAttribute("error", "That username was not found.");
         request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
         }
-    } 
+    }
     // Accept friend request
     else if(request.getParameter("request_accept") != null) {
         String friend_to_add = request.getParameter("request_accept");
