@@ -1,9 +1,10 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.store.basic.UserStore" %>
 
 <%
-    ArrayList<User> friends = (ArrayList<User>) request.getAttribute("friends");
-    ArrayList<User> requests = (ArrayList<User>) request.getAttribute("requests");
+    ArrayList<String> friends = (ArrayList<String>) request.getAttribute("friends");
+    ArrayList<String> requests = (ArrayList<String>) request.getAttribute("requests");
 %>
 
 <!DOCTYPE html>
@@ -51,14 +52,14 @@
                 <%
                     if(requests != null) {
                         for(int i = 0; i < requests.size(); i++) {
-                            User user = requests.get(i);
-                            String name = user.getName();
+                            String username = requests.get(i);
+                            User user = UserStore.getInstance().getUser(username);
                         
                 %>
                         <form action="/friend" method="POST">
-                            <li><strong><%= name %> wants to be your friend!</strong></li>
+                            <li><strong><%= username %> wants to be your friend!</strong></li>
+                            <input type="hidden" name="store_user" id="hid" value=<%= username %>/>
                             <input type="submit" name="accept" value="accept"/>
-                            <input type="hidden" name="store_user" value=<%= name %>/>
                             <input type="submit" name="decline" value="decline"/>
                         </form>
                 <%
@@ -72,10 +73,10 @@
             <ul>
                 <%
                     if(friends != null) {
-                        for(User user: friends) {
-                            String name = user.getName();
+                        for(String user: friends) {
+                            User me = UserStore.getInstance().getUser(user);
                 %>
-                        <li><strong><%= name %> is your friend!</strong></li>
+                        <li><strong><%= user %> is your friend!</strong></li>
                 <%
                         }
                     }

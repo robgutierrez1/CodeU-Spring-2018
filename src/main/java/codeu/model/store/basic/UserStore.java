@@ -129,12 +129,12 @@ public class UserStore {
   }
 
   /** Update the request list for the given user */
-  public void updateFriendRequests(User other_user, ArrayList<User> requests) {
+  public void updateFriendRequests(User other_user, ArrayList<String> requests) {
     persistentStorageAgent.updateRequests(other_user, requests);
   }
 
   /** Update the friends list of this user */
-  public void updateFriends(User this_user, ArrayList<User> friends) {
+  public void updateFriends(User this_user, ArrayList<String> friends) {
     persistentStorageAgent.updateFriends(this_user, friends);
   }
 }

@@ -28,8 +28,8 @@ public class User {
   private final String name;
   private final String hashedPassword;
   private final Instant creation;
-  private final ArrayList<User> friends;
-  private final ArrayList<User> requests;
+  private final ArrayList<String> friends;
+  private final ArrayList<String> requests;
 
   /**
    * Constructs a new User.
@@ -41,19 +41,19 @@ public class User {
    * @param friends the friends list of this User
    * @param requests the friend requests of this User
    */
-  public User(UUID id, String name, String password, Instant creation, ArrayList<User> friends, 
-                                                          ArrayList<User> requests) {
+  public User(UUID id, String name, String password, Instant creation, ArrayList<String> friends, 
+                                                          ArrayList<String> requests) {
     this.id = id;
     this.name = name;
     this.hashedPassword = password;
     this.creation = creation;
     if(friends == null) {
-      this.friends = new ArrayList<User>();
+      this.friends = new ArrayList<String>();
     } else {
       this.friends = friends;
     }
     if(requests == null) {
-      this.requests = new ArrayList<User>();
+      this.requests = new ArrayList<String>();
     } else {
       this.requests = requests;
     }
@@ -90,17 +90,17 @@ public class User {
   }
 
   /** Return the list of friends for this user */
-  public ArrayList<User> getFriends() {
+  public ArrayList<String> getFriends() {
     return this.friends;
   }
 
   /** Add a friend to this user's friend list */
-  public void addFriend(User user) {
+  public void addFriend(String user) {
     this.friends.add(user);
   }
 
   /** Return the list of friend requests */
-  public ArrayList<User> getRequests() {
+  public ArrayList<String> getRequests() {
     return this.requests;
   }
 }

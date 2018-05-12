@@ -25,6 +25,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,8 +67,12 @@ public class PersistentDataStore {
         String userName = (String) entity.getProperty("username");
         String password = (String)entity.getProperty("password");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        ArrayList<User> friends = (ArrayList<User>) entity.getProperty("friends");
-        ArrayList<User> requests = (ArrayList<User>) entity.getProperty("requests");
+        // Entity may not know its user here as well
+        // Make helper function to covnert back from string to list
+        ArrayList<String> friends = (ArrayList<String>) 
+                                          stringToList((String) entity.getProperty("friends"));
+        ArrayList<String> requests = (ArrayList<String>) 
+                                          stringToList((String) entity.getProperty("requests"));
         User user = new User(uuid, userName, password, creationTime, friends, requests);
         users.add(user);
       } catch (Exception e) {
@@ -155,9 +160,9 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
-    // Added
-    userEntity.setProperty("friends", user.getFriends());
-    userEntity.setProperty("requests", user.getRequests());
+    // Added. Error here?
+    userEntity.setProperty("friends", listToString(user.getFriends()));
+    userEntity.setProperty("requests", listToString(user.getRequests()));
     datastore.put(userEntity);
   }
 
@@ -182,7 +187,7 @@ public class PersistentDataStore {
     datastore.put(conversationEntity);
   }
   /** Update a User object's request list to the Datastore service */
-  public void updateRequests(User other_user, ArrayList<User> requests) {
+  public void updateRequests(User other_user, ArrayList<String> requests) {
     Query query = new Query("chat-users");
     PreparedQuery results = datastore.prepare(query);
 
@@ -190,14 +195,14 @@ public class PersistentDataStore {
       UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
       if(uuid.equals(other_user.getId())) {
         // Might be source of error. PropertyContainer doesn't know what user is?
-        entity.setProperty("requests", requests);
+        entity.setProperty("requests", listToString(requests));
         datastore.put(entity);
       }
     }
   }
 
   /** Update a User object's friends list to the Datastore service */
-  public void updateFriends(User this_user, ArrayList<User> friends) {
+  public void updateFriends(User this_user, ArrayList<String> friends) {
     Query query = new Query("chat-users");
     PreparedQuery results = datastore.prepare(query);
 
@@ -205,9 +210,22 @@ public class PersistentDataStore {
       UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
       if(uuid.equals(this_user.getId())) {
         // Same case here?
-        entity.setProperty("friends", friends);
+        entity.setProperty("friends", listToString(friends));
         datastore.put(entity);
       }
     }
+  }
+
+  /** Converts arraylist of users into a string of UUIDs to store in persistent storage */
+  public String listToString(ArrayList<String> users) {
+    String csv = String.join(",", users);
+    return csv;
+  }
+
+  /** Converts string of UUIDs to users and returns arraylist full of said users */
+  public ArrayList<String> stringToList(String users) {
+    ArrayList<String> result = new ArrayList<String>();
+    result = new ArrayList<String>(Arrays.asList(users.split(",")));
+    return result;
   }
 }

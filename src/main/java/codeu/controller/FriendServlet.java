@@ -43,8 +43,8 @@ public class FriendServlet extends HttpServlet {
     if(request.getSession().getAttribute("user") != null) {
         String this_user_name = (String) request.getSession().getAttribute("user");
         User this_user = userStore.getUser(this_user_name);
-        ArrayList<User> friends = this_user.getFriends();
-        ArrayList<User> requests = this_user.getRequests();
+        ArrayList<String> friends = this_user.getFriends();
+        ArrayList<String> requests = this_user.getRequests();
         request.setAttribute("friends", friends);
         request.setAttribute("requests", requests);
     }
@@ -67,10 +67,10 @@ public class FriendServlet extends HttpServlet {
             User other_user = userStore.getUser(username);
             // Find out which user sent the friend request
             String this_user_name = (String) request.getSession().getAttribute("user");
-            User this_user = userStore.getUser(this_user_name);
+            // User this_user = userStore.getUser(this_user_name);
             // Add user to friend requests of potential friend
-            ArrayList<User> requests = other_user.getRequests();
-            requests.add(this_user);
+            ArrayList<String> requests = other_user.getRequests();
+            requests.add(this_user_name);
             // Update the requests of the other user
             userStore.updateFriendRequests(other_user, requests);
             request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
@@ -83,17 +83,21 @@ public class FriendServlet extends HttpServlet {
     } 
     // Accept friend request
     else if(request.getParameter("accept") != null) {
-        String friend_to_add = request.getParameterValues("store_user")[0];
+        String friend_to_add = request.getParameter("store_user").toString();
         User other_user = userStore.getUser(friend_to_add);
-        ArrayList<User> other_friends = other_user.getFriends();
+        // List of friends of the user who sent the friend request
+        // Throwing NULL?????
+        ArrayList<String> other_friends = other_user.getFriends();
+        // Name of the user who received the friend request
         String this_user_name = (String) request.getSession().getAttribute("user");
         User this_user = userStore.getUser(this_user_name);
-        ArrayList<User> friends = this_user.getFriends();
-        ArrayList<User> requests = this_user.getRequests();
+        // This users friends and requests lists
+        ArrayList<String> friends = this_user.getFriends();
+        ArrayList<String> requests = this_user.getRequests();
         // Add each other as friends and remove from requests list
-        friends.add(other_user);
-        other_friends.add(this_user);
-        requests.remove(other_user);
+        friends.add(friend_to_add);
+        other_friends.add(this_user_name);
+        requests.remove(friend_to_add);
         // Update the requests of the other user
         userStore.updateFriendRequests(other_user, requests);
         // Update the friend lists of both users
@@ -103,13 +107,13 @@ public class FriendServlet extends HttpServlet {
     } 
     // Decline friend request
     else if(request.getParameter("decline") != null) {
-        String friend_to_delete = request.getParameterValues("store_user")[0];
+        String friend_to_delete = request.getParameter("store_user").toString();
         User other_user = userStore.getUser(friend_to_delete);
         String this_user_name = (String) request.getSession().getAttribute("user");
         User this_user = userStore.getUser(this_user_name);
-        ArrayList<User> requests = this_user.getRequests();
+        ArrayList<String> requests = this_user.getRequests();
         // Remove from friend requests
-        requests.remove(other_user);
+        requests.remove(friend_to_delete);
         // Update the requests of the other user
         userStore.updateFriendRequests(other_user, requests);
         request.getRequestDispatcher("/WEB-INF/view/friend.jsp").forward(request, response);
