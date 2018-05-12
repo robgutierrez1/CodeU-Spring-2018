@@ -81,7 +81,7 @@ public class Message {
     LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
     String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
     return formatted;
-  
+  }
   public boolean getOpenToPublic() {
 	  return openToPublic;
   }

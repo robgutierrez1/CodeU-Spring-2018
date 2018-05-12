@@ -99,7 +99,6 @@ public class User {
     String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
     return formatted;
   }
-}
   
   /** Returns the aboutMe of this User. */
   public String getAboutMe() {
