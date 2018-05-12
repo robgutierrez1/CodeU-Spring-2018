@@ -104,7 +104,9 @@
   <servlet-mapping>
     <servlet-name>messageUpload</servlet-name>
     <url-pattern>/messageUpload</url-pattern>
+  </servlet-mapping>
 
+  <servlet>
     <servlet-name>Serve</servlet-name>
     <servlet-class>Serve</servlet-class>
   </servlet>
