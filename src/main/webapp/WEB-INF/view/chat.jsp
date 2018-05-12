@@ -41,6 +41,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       background-color: orange; 
       display: inline;
     }
+    #red {
+      color: mediumvioletred;
+    }
   </style>
 
   <script>
@@ -59,7 +62,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       
     <%
        if (viewer != null && viewer.getNotify() != null && !viewer.getNotify().isEmpty()){
-       %><p>You got a notification! </p><%
+         for (String message : viewer.getNotify()){
+            %><p id = red><%= message %></p><%
+         }
        } else{
        %><p>No notifications yet... </p><%                            
        }

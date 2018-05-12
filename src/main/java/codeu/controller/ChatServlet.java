@@ -152,7 +152,7 @@ public class ChatServlet extends HttpServlet {
             User notifiee = userStore.getUser(atItem[0]);
             if (notifiee != null){
             		// will be changed into something meaningful in the future
-            		notifiee.getNotify().add("You are mentioned by" + user.getName() + " in chatroom " + conversation.getTitle()); 
+            		notifiee.getNotify().add("You are mentioned by \"" + user.getName() + "\" in chatroom: " + conversation.getTitle()); 
             }
     		}
     }

@@ -15,12 +15,23 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.data.User" %>
+<%
+User viewer = (User) request.getAttribute("viewer");
+%>
 
 <!DOCTYPE html>
 <html>
 <head>
   <title>Conversations</title>
   <link rel="stylesheet" href="/css/main.css">
+    
+  <style>
+    #red {
+      color: mediumvioletred;
+    }
+  </style>
+    
 </head>
 <body>
 
@@ -46,6 +57,17 @@
       <hr/>
     <% } %>
 
+    <%
+       if (viewer != null && viewer.getNotify() != null && !viewer.getNotify().isEmpty()){
+         for (String message : viewer.getNotify()){
+            %><p id = red><%= message %></p><%
+         }
+       } else{
+       %><p>No notifications yet... </p><%                            
+       }
+       
+    %>
+    
     <h1>Conversations</h1>
 
     <%
