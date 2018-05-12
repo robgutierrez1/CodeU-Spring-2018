@@ -138,6 +138,18 @@ public class ChatServlet extends HttpServlet {
       response.sendRedirect("/conversations");
       return;
     }
+    
+    // deal with user hiding mentioning messages
+    for (int i = 0; i < user.getNotify().size(); i++) {
+    		String buttonVal = request.getParameter("buttonVal" + i);
+    		
+    		if (buttonVal != null && buttonVal.equals("hide")) {
+    			user.getNotify().remove(i);
+    			// leave after we done removing notifications (or messageContent will be null)
+    			response.sendRedirect("/chat/" + conversationTitle);
+    			return;
+    		}
+    }
 
     String messageContent = request.getParameter("message");
 
@@ -166,7 +178,7 @@ public class ChatServlet extends HttpServlet {
             Instant.now());
 
     messageStore.addMessage(message);
-
+    
     // redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
   }

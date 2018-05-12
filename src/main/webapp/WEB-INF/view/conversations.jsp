@@ -29,6 +29,7 @@ User viewer = (User) request.getAttribute("viewer");
   <style>
     #red {
       color: mediumvioletred;
+      display: inline-block;
     }
   </style>
     
@@ -60,7 +61,7 @@ User viewer = (User) request.getAttribute("viewer");
     <%
        if (viewer != null && viewer.getNotify() != null && !viewer.getNotify().isEmpty()){
          for (String message : viewer.getNotify()){
-            %><p id = red><%= message %></p><%
+            %><div id = red><%= message %></div><%
          }
        } else{
        %><p>No notifications yet... </p><%                            

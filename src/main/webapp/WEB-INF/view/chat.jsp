@@ -44,6 +44,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     #red {
       color: mediumvioletred;
     }
+    #inline-button {
+      display: inline-block;  
+    }
   </style>
 
   <script>
@@ -60,16 +63,19 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
   <div id="container">
       
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
     <%
        if (viewer != null && viewer.getNotify() != null && !viewer.getNotify().isEmpty()){
-         for (String message : viewer.getNotify()){
-            %><p id = red><%= message %></p><%
+         for (int i = 0; i < viewer.getNotify().size(); i++){
+            String message = viewer.getNotify().get(i);
+            %><div id = red><%= message %><button id="inline-button" type="submit" name = "buttonVal<%=i%>" value = "hide">Hide</button></div><%
          }
        } else{
        %><p>No notifications yet... </p><%                            
        }
        
     %>
+    </form>
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
