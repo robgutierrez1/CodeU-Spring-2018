@@ -47,27 +47,20 @@
             <br/>
             <button type="submit" name="add">Add Friend</button>
         </form>
-        <div id="friend">
-            <ul>
-                <%
-                    if(requests != null) {
-                        for(int i = 0; i < requests.size(); i++) {
-                            String username = requests.get(i);
-                            User user = UserStore.getInstance().getUser(username);
-                        
-                %>
-                        <form action="/friend" method="POST">
-                            <li><strong><%= username %> wants to be your friend!</strong></li>
-                            <input type="hidden" name="store_user" id="hid" value=<%= username %>/>
-                            <input type="submit" name="accept" value="accept"/>
-                            <input type="submit" name="decline" value="decline"/>
-                        </form>
-                <%
-                        }
-                    }
-                %>
-            </ul>
-        </div>
+
+        <form action="/friend" method="POST">
+            <label for="request_accept">Accept Friend Request: </label>
+            <input type="text" name="request_accept" id="request_accept">
+            <br/>
+            <button type="submit" name="accept">Accept</button>
+        </form>
+
+        <form action="/friend" method="POST">
+            <label for="request_decline">Decline Friend Request: </label>
+            <input type="text" name="request_decline" id="request_decline">
+            <br/>
+            <button type="submit" name="decline">Decline</button>
+        </form>
 
         <div id="friend">
             <ul>
@@ -77,6 +70,23 @@
                             User me = UserStore.getInstance().getUser(user);
                 %>
                         <li><strong><%= user %> is your friend!</strong></li>
+                <%
+                        }
+                    }
+                %>
+            </ul>
+        </div>
+        
+        <div id="friend">
+            <ul>
+                <%
+                    if(requests != null) {
+                        for(int i = 0; i < requests.size(); i++) {
+                            String username = requests.get(i);
+                            User user = UserStore.getInstance().getUser(username);
+                        
+                %>
+                    <li><strong><%= username %> has sent you a friend request!</strong></li>
                 <%
                         }
                     }

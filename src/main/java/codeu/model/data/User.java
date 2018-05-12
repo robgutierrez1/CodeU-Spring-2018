@@ -38,10 +38,29 @@ public class User {
    * @param name the username of this User
    * @param password the password of this User
    * @param creation the creation time of this User
+   */
+  public User(UUID id, String name, String password, Instant creation) {
+    this.id = id;
+    this.name = name;
+    this.hashedPassword = password;
+    this.creation = creation;
+    // Initialize empty friends and requests
+    this.friends = new ArrayList<String>();
+    this.requests = new ArrayList<String>();
+  }
+
+   /**
+   * Constructs a new User with passed in request and friends parameters.
+   *
+   * @param id the ID of this User
+   * @param name the username of this User
+   * @param password the password of this User
+   * @param creation the creation time of this User
    * @param friends the friends list of this User
    * @param requests the friend requests of this User
    */
-  public User(UUID id, String name, String password, Instant creation, ArrayList<String> friends, 
+
+   public User(UUID id, String name, String password, Instant creation, ArrayList<String> friends, 
                                                           ArrayList<String> requests) {
     this.id = id;
     this.name = name;
