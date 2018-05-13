@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,11 +72,14 @@ public class PersistentDataStore {
         String imageUrl = (String) entity.getProperty("imageUrl");
         System.out.println("the imageUrl when loading all users is:" + imageUrl);
         System.out.println("the user is:" + userName);
-        User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
-
         if (aboutMe == null){
           aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
         }
+        ArrayList<String> friends = (ArrayList<String>) 
+                                          stringToList((String) entity.getProperty("friends"));
+        ArrayList<String> requests = (ArrayList<String>) 
+                                          stringToList((String) entity.getProperty("requests"));
+        User user = new User(uuid, userName, password, creationTime, friends, requests, aboutMe, imageUrl);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -84,7 +88,6 @@ public class PersistentDataStore {
         throw new PersistentDataStoreException(e);
       }
     }
-
     return users;
   }
 
@@ -191,7 +194,10 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    // Added.
     userEntity.setProperty("aboutme", user.getAboutMe().toString());
+    userEntity.setProperty("friends", listToString(user.getFriends()));
+    userEntity.setProperty("requests", listToString(user.getRequests()));
     datastore.put(userEntity);
   }
     
@@ -250,5 +256,48 @@ public class PersistentDataStore {
     activityEntity.setProperty("creation_time", activity.getCreationTime().toString());
     activityEntity.setProperty("title", activity.getType());
     datastore.put(activityEntity);
+  }
+  
+  /** Update a User object's request list to the Datastore service */
+  public void updateRequests(User other_user, ArrayList<String> requests) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+
+    for(Entity entity: results.asIterable()) {
+      UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+      if(uuid.equals(other_user.getId())) {
+        // Might be source of error. PropertyContainer doesn't know what user is?
+        entity.setProperty("requests", listToString(requests));
+        datastore.put(entity);
+      }
+    }
+  }
+
+  /** Update a User object's friends list to the Datastore service */
+  public void updateFriends(User this_user, ArrayList<String> friends) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+
+    for(Entity entity: results.asIterable()) {
+      UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+      if(uuid.equals(this_user.getId())) {
+        // Same case here?
+        entity.setProperty("friends", listToString(friends));
+        datastore.put(entity);
+      }
+    }
+  }
+
+  /** Converts arraylist of users into a string of UUIDs to store in persistent storage */
+  public String listToString(ArrayList<String> users) {
+    String csv = String.join(",", users);
+    return csv;
+  }
+
+  /** Converts string of UUIDs to users and returns arraylist full of said users */
+  public ArrayList<String> stringToList(String users) {
+    ArrayList<String> result = new ArrayList<String>();
+    result = new ArrayList<String>(Arrays.asList(users.split(",")));
+    return result;
   }
 }

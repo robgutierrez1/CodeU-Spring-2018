@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /** Class representing a registered user. */
 public class User {
@@ -27,8 +28,11 @@ public class User {
   private final String name;
   private final String hashedPassword;
   private final Instant creation;
+  // Added
   private String aboutMe;
   private String imageUrl;
+  private final ArrayList<String> friends;
+  private final ArrayList<String> requests;
 
   /**
    * Constructs a new User.
@@ -36,8 +40,6 @@ public class User {
    * @param id the ID of this User
    * @param name the username of this User
    * @param password the password of this User
-   * @param creation the creation time of this User
-   * @param creation the creation time of this User
    * @param creation the creation time of this User
    */
   public User(UUID id, String name, String password, Instant creation) {
@@ -50,25 +52,43 @@ public class User {
     // added aboutMe
     this.aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
     this.imageUrl = "";
-  }
     
-  /**
-   * Constructs a new User.
+    // Initialize empty friends and requests
+    this.friends = new ArrayList<String>();
+    this.requests = new ArrayList<String>();
+  }
+
+   /**
+   * Constructs a new User with passed in request and friends parameters.
    *
    * @param id the ID of this User
    * @param name the username of this User
    * @param password the password of this User
    * @param creation the creation time of this User
+   * @param friends the friends list of this User
+   * @param requests the friend requests of this User
    * @param aboutMe the about me/bio of this User
    */
-   public User(UUID id, String name, String password, Instant creation, String aboutMe, String imageUrl) {
-     this.id = id;
-     this.name = name;
-     this.hashedPassword = password;
-     this.creation = creation;
-     this.aboutMe = aboutMe;
-     this.imageUrl = imageUrl;
-   }
+
+   public User(UUID id, String name, String password, Instant creation, ArrayList<String> friends, 
+                      ArrayList<String> requests, String aboutMe, String imageUrl) {
+    this.id = id;
+    this.name = name;
+    this.hashedPassword = password;
+    this.creation = creation;
+    if(friends == null) {
+      this.friends = new ArrayList<String>();
+    } else {
+      this.friends = friends;
+    }
+    if(requests == null) {
+      this.requests = new ArrayList<String>();
+    } else {
+      this.requests = requests;
+    }
+    this.aboutMe = aboutMe;
+    this.imageUrl = imageUrl;
+  }
 
   /** Returns the ID of this User. */
   public UUID getId() {
@@ -122,5 +142,20 @@ public class User {
    */
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
+  }
+
+  /** Return the list of friends for this user */
+  public ArrayList<String> getFriends() {
+    return this.friends;
+  }
+
+  /** Add a friend to this user's friend list */
+  public void addFriend(String user) {
+    this.friends.add(user);
+  }
+
+  /** Return the list of friend requests */
+  public ArrayList<String> getRequests() {
+    return this.requests;
   }
 }
