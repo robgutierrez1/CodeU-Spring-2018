@@ -20,6 +20,9 @@ import java.util.UUID;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Class representing a conversation, which can be thought of as a chat room. Conversations are
@@ -30,6 +33,7 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
+  public final List<UUID> members;
 
   /**
    * Constructs a new Conversation.
@@ -45,6 +49,21 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    this.members = new ArrayList<UUID>(Arrays.asList(owner));
+    //this.creator = creator;
+  }
+
+   public Conversation(UUID id, UUID owner, String title, Instant creation, List<UUID> members){ 
+    this.id = id;
+    this.owner = owner;
+    this.creation = creation;
+    this.title = title;
+    if(members == null) {
+      this.members = new ArrayList<UUID>(Arrays.asList(owner));
+    }
+    else {
+      this.members = members;
+    }
   }
 
   /** Returns the ID of this Conversation. */
@@ -66,6 +85,15 @@ public class Conversation {
   public Instant getCreationTime() {
     return creation;
   }
+
+    /** Returns list of members in this Conversation*/
+  public List<UUID> getMembers() {
+    return members;
+  }
+
+  // public String getCreator() {
+  //   return creator;
+  // }
 
    /**Accepts and instant and returns a string of the formatted date */
    public String getDate(Instant time) {
