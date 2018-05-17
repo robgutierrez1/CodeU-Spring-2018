@@ -9,7 +9,7 @@
 <%@ page import="codeu.model.store.basic.MessageStore" %>
 <%@ page import="java.time.Instant" %>
 <%@ page import="java.util.UUID" %>
-<%@page import="java.util.ArrayList" %>
+<%@ page import="java.util.ArrayList" %>
 
 <%--
   Copyright 2017 Google Inc.

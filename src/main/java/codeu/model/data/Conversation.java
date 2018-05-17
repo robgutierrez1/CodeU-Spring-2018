@@ -50,7 +50,20 @@ public class Conversation {
     this.creation = creation;
     this.title = title;
     this.members = new ArrayList<UUID>(Arrays.asList(owner));
-    //this.members.add(owner);
+    //this.creator = creator;
+  }
+
+   public Conversation(UUID id, UUID owner, String title, Instant creation, List<UUID> members){ 
+    this.id = id;
+    this.owner = owner;
+    this.creation = creation;
+    this.title = title;
+    if(members == null) {
+      this.members = new ArrayList<UUID>(Arrays.asList(owner));
+    }
+    else {
+      this.members = members;
+    }
   }
 
   /** Returns the ID of this Conversation. */
@@ -77,6 +90,10 @@ public class Conversation {
   public List<UUID> getMembers() {
     return members;
   }
+
+  // public String getCreator() {
+  //   return creator;
+  // }
 
    /**Accepts and instant and returns a string of the formatted date */
    public String getDate(Instant time) {

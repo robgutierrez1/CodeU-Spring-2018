@@ -20,6 +20,7 @@ import codeu.model.data.User;
 import codeu.model.data.Activity;
 import codeu.model.store.persistence.PersistentDataStore;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This class is the interface between the application and PersistentDataStore, which handles
@@ -118,6 +119,11 @@ public class PersistentStorageAgent {
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
     persistentDataStore.writeThrough(conversation);
+  }
+
+  /** Update a User object's imageUrl to the Datastore service.*/
+  public void updateConversationMembers(Conversation conversation, List<UUID> members) {
+    persistentDataStore.updateConversationMembers(conversation, members);
   }
 
   /** Write a Conversation object to the Datastore service. */

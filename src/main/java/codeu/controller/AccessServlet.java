@@ -85,18 +85,18 @@ public class AccessServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-        String requestUrl = request.getRequestURI();
-        String conversationTitle = requestUrl.substring("/access/".length());
+    String requestUrl = request.getRequestURI();
+    String conversationTitle = requestUrl.substring("/access/".length());
 
-        Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
-        List<UUID> members = conversationStore.getMembersInConversation(conversation);
-        String chatURL = "/chat/" + conversationTitle;
+    Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
+    List<UUID> members = conversationStore.getMembersInConversation(conversation);
+    String chatURL = "/chat/" + conversationTitle;
 
-        request.setAttribute("conversation", conversation);
-        request.setAttribute("members", members);
-        request.setAttribute("chatURL", chatURL);
-        request.setAttribute("conversationTitle", conversationTitle);
-        request.getRequestDispatcher("/WEB-INF/view/access.jsp").forward(request, response);
+    request.setAttribute("conversation", conversation);
+    request.setAttribute("members", members);
+    request.setAttribute("chatURL", chatURL);
+    request.setAttribute("conversationTitle", conversationTitle);
+    request.getRequestDispatcher("/WEB-INF/view/access.jsp").forward(request, response);
   }
 
   /**
@@ -109,71 +109,68 @@ public class AccessServlet extends HttpServlet {
       throws IOException, ServletException {
         
 
-        String username = (String) request.getSession().getAttribute("user");
-        if (username == null) {
-          // user is not logged in, don't let them create a conversation
-          response.sendRedirect("/conversations");
-          return;
-        }
+    String username = (String) request.getSession().getAttribute("user");
+    if (username == null) {
+      // user is not logged in, don't let them create a conversation
+      response.sendRedirect("/conversations");
+      return;
+    }
 
-        User user = userStore.getUser(username);
-        if (user == null) {
-          // user was not found, don't let them create a conversation
-          System.out.println("User not found: " + username);
-          response.sendRedirect("/conversations");
-          return;
-        }
+    User user = userStore.getUser(username);
+    if (user == null) {
+      // user was not found, don't let them create a conversation
+      System.out.println("User not found: " + username);
+      response.sendRedirect("/conversations");
+      return;
+    }
 
-        String requestUrl = request.getRequestURI();
-        String conversationTitle = requestUrl.substring("/access/".length());
-        Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
+    String requestUrl = request.getRequestURI();
+    String conversationTitle = requestUrl.substring("/access/".length());
+    Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
 
 
-        String buttonVal = request.getParameter("buttonVal");
+    String buttonVal = request.getParameter("buttonVal");
 
-        if(buttonVal == null) {
-          System.out.println("no button");
-        }
-        else if(buttonVal.equals("add")) { 
-          System.out.println("add member");
+    if(buttonVal == null) {
+      System.out.println("no button");
+    }
+    else if(buttonVal.equals("add")) { 
+    System.out.println("add member");
           
           
-          String userToAdd = request.getParameter("userToAdd");
-          User newMember = userStore.getUser(userToAdd);
+      String userToAdd = request.getParameter("userToAdd");
+      User newMember = userStore.getUser(userToAdd);
 
-          if (user == null) {
-            // couldn't find user with that username
-            System.out.println("User not found: " + userToAdd);
-            response.sendRedirect("/access/" + conversationTitle);
-            return;
-          }
-          else if (userStore.getUserId(username) != conversation.getOwnerId()) {
-            System.out.println("User not owner of this conversation");
-          }
-          else if ((conversation.members).contains(userStore.getUserId(userToAdd))) {
-            System.out.println("User is already a member of this conversation");
-          }
-          else {
-            UUID newMemberId = userStore.getUserId(userToAdd);
-            conversationStore.addMember(conversation, newMemberId); 
+      if (newMember == null) {
+        // couldn't find user with that username
+        System.out.println("User not found: " + userToAdd);
+      }
+      else if (!(username.equals(userStore.getUsername(conversation.getOwnerId())))) {
+        System.out.println("User not owner of this conversation");
+        System.out.println("owner of conversation is " + userStore.getUsername(conversation.getOwnerId()));
+        System.out.println("User is " + username);
+      }
+      else if ((conversation.members).contains(userStore.getUserId(userToAdd))) {
+        System.out.println("User is already a member of this conversation");
+      }
+      else {
+        UUID newMemberId = userStore.getUserId(userToAdd);
+        conversationStore.addMember(conversation, newMemberId); 
     
-            response.sendRedirect("/access/" + conversationTitle);
-            return;
-          }
-
-
-          
-        }
-        else if(buttonVal.equals("chat")) {
-          System.out.println("go to chat");
-          response.sendRedirect("/chat/" + conversationTitle);
-          return;
-        }
+        response.sendRedirect("/access/" + conversationTitle);
+        return;
+      }         
+    }
+    else if(buttonVal.equals("chat")) {
+      System.out.println("go to chat");
+      response.sendRedirect("/chat/" + conversationTitle);
+      return;
+    }
         
-        else {
-          // default case: shouldn't reach here
-          System.out.println("Something went wrong...");
-        }
+    else {
+      // default case: shouldn't reach here
+      System.out.println("Something went wrong...");
+    }
   response.sendRedirect("/access/" + conversationTitle);
   }
 }
