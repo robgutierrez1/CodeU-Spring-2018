@@ -17,6 +17,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Activity;
 import codeu.model.store.persistence.PersistentDataStore;
 
 import java.util.ArrayList;
@@ -91,6 +92,16 @@ public class PersistentStorageAgent {
     return persistentDataStore.loadMessages();
   }
 
+  /**
+   * Retrieve all Activity objects from the Datastore service. The returned list may be empty.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<Activity> loadActivities() throws PersistentDataStoreException {
+    return persistentDataStore.loadActivities();
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     persistentDataStore.writeThrough(user);
@@ -105,6 +116,11 @@ public class PersistentStorageAgent {
   public void updateNotifyList(User user, ArrayList<String> notifyList) {
     persistentDataStore.updateNotifyList(user, notifyList);
   }
+  
+  /** Update a User object's imageUrl to the Datastore service.*/
+  public void updateImageUrl(User user, String imageUrl) {
+    persistentDataStore.updateImageUrl(user, imageUrl);
+  }
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
@@ -114,5 +130,10 @@ public class PersistentStorageAgent {
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Message message) {
     persistentDataStore.writeThrough(message);
+  }
+
+  /** Write a Activity object to the Datastore service. */
+  public void writeThrough(Activity activity) {
+    persistentDataStore.writeThrough(activity);
   }
 }

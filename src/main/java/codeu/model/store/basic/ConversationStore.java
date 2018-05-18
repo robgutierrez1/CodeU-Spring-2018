@@ -15,9 +15,15 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Activity;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
+// Added
+import java.util.UUID;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -28,6 +34,7 @@ public class ConversationStore {
 
   /** Singleton instance of ConversationStore. */
   private static ConversationStore instance;
+
 
   /**
    * Returns the singleton instance of ConversationStore that should be shared between all servlet
@@ -58,6 +65,11 @@ public class ConversationStore {
   /** The in-memory list of Conversations. */
   private List<Conversation> conversations;
 
+
+  // private List<Activity> activities;
+  // activities = new ArrayList<>();
+  // activities = activities.getAllActivities();
+
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
@@ -83,12 +95,15 @@ public class ConversationStore {
 
   /** Access the current set of conversations known to the application. */
   public List<Conversation> getAllConversations() {
+    Collections.sort(conversations, new ConversationComparator());
+    Collections.reverse(conversations);
     return conversations;
   }
 
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
+    //ActivityStore.activities.add(conversation);
     persistentStorageAgent.writeThrough(conversation);
   }
 
@@ -116,5 +131,15 @@ public class ConversationStore {
   /** Sets the List of Conversations stored by this ConversationStore. */
   public void setConversations(List<Conversation> conversations) {
     this.conversations = conversations;
+  }
+
+  /** Find conversation with given UUID. Use in Activity Feed */
+  public String findTitle(UUID ID) {
+    for(Conversation conversation: conversations) {
+      if(conversation.getId().equals(ID)) {
+        return conversation.getTitle();
+      }
+    }
+    return "No Conversation";
   }
 }

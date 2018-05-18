@@ -15,9 +15,11 @@
 package codeu.controller;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Activity;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.ActivityStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
@@ -35,6 +37,10 @@ public class ConversationServlet extends HttpServlet {
 
   /** Store class that gives access to Conversations. */
   private ConversationStore conversationStore;
+
+  /** Store class that gives access to Acitvities. */
+  private ActivityStore activityStore;
+
 
   /**
    * Set up state for handling conversation-related requests. This method is only called when
@@ -118,7 +124,10 @@ public class ConversationServlet extends HttpServlet {
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
 
+    //Activity activity = new Activity(Instant.now(), "Conversation");    
+    
     conversationStore.addConversation(conversation);
+    //activityStore.addActivity(conversation);
     response.sendRedirect("/chat/" + conversationTitle);
   }
 }
