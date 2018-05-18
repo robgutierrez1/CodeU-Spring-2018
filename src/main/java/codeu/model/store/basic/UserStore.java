@@ -108,6 +108,11 @@ public class UserStore {
   public void updateAboutMe(User user, String aboutMe) {
     persistentStorageAgent.updateAboutMe(user, aboutMe);
   }
+  
+  /** Update notifyList for a user*/
+  public void updateNotifyList(User user, ArrayList<String> notfiyList) {
+    persistentStorageAgent.updateNotifyList(user, notfiyList);
+  }
     
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {

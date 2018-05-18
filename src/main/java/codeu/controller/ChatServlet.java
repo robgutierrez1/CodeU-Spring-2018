@@ -145,6 +145,7 @@ public class ChatServlet extends HttpServlet {
     		
     		if (buttonVal != null && buttonVal.equals("hide")) {
     			user.getNotify().remove(i);
+    			userStore.updateNotifyList(user, user.getNotify());
     			// leave after we done removing notifications (or messageContent will be null)
     			response.sendRedirect("/chat/" + conversationTitle);
     			return;
@@ -164,7 +165,8 @@ public class ChatServlet extends HttpServlet {
             User notifiee = userStore.getUser(atItem[0]);
             if (notifiee != null){
             		// will be changed into something meaningful in the future
-            		notifiee.getNotify().add("You are mentioned by \"" + user.getName() + "\" in chatroom: " + conversation.getTitle()); 
+            		notifiee.getNotify().add("You are mentioned by \"" + user.getName() + "\" in chatroom: " + conversation.getTitle());
+            		userStore.updateNotifyList(notifiee, notifiee.getNotify());
             }
     		}
     }

@@ -109,4 +109,8 @@ public class User {
 	}
     return notifyList;
   }
+  
+  public void setNotify(ArrayList<String> notifyList) {
+	  this.notifyList = notifyList;
+  }
 }

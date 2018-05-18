@@ -18,6 +18,8 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStore;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,6 +99,11 @@ public class PersistentStorageAgent {
   /** Update a User object's aboutMe to the Datastore service.*/
   public void updateAboutMe(User user, String aboutMe) {
     persistentDataStore.updateAboutMe(user, aboutMe);
+  }
+  
+  /** Update a User object's notifyList to the Datastore service.*/
+  public void updateNotifyList(User user, ArrayList<String> notifyList) {
+    persistentDataStore.updateNotifyList(user, notifyList);
   }
 
   /** Write a Message object to the Datastore service. */

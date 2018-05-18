@@ -70,7 +70,9 @@ public class PersistentDataStore {
         if (aboutMe == null){
           aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
         }
+        ArrayList<String> notifyList = (ArrayList<String>) entity.getProperty("notifyList");
         User user = new User(uuid, userName, password, creationTime, aboutMe);
+        user.setNotify(notifyList);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -158,6 +160,7 @@ public class PersistentDataStore {
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
     userEntity.setProperty("aboutme", user.getAboutMe().toString());
+    userEntity.setProperty("notifyList", user.getNotify());
     datastore.put(userEntity);
   }
     
@@ -170,6 +173,20 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         if (uuid.equals(user.getId())) {
           entity.setProperty("aboutme", aboutMe);
+          datastore.put(entity);
+        }
+    }
+  }
+  
+  /** Update a User object's notifyList to the Datastore service.*/
+  public void updateNotifyList(User user, ArrayList<String> notifyList) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+      
+    for (Entity entity : results.asIterable()) {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        if (uuid.equals(user.getId())) {
+          entity.setProperty("notifyList", notifyList);
           datastore.put(entity);
         }
     }
