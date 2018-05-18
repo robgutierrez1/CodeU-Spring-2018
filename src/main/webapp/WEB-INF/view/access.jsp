@@ -31,6 +31,8 @@
 String conversationTitle = (String)request.getAttribute("conversationTitle");
 String chatURL = (String)request.getAttribute("chatURL");
 Conversation conversation = ConversationStore.getInstance().getConversationWithTitle(conversationTitle);
+UUID owner = conversation.getOwnerId();
+
 %>
 <!DOCTYPE html>
 <html>
@@ -50,6 +52,8 @@ Conversation conversation = ConversationStore.getInstance().getConversationWithT
 
     <% if(request.getSession().getAttribute("user") != null){ %>
       <h1>Add Members</h1>
+      <p>Only the owner of the conversation can add members</p>
+      
       <form action="/access/<%= conversation.getTitle() %>" method="POST">
           <div class="form-group">
             <label class="form-control-label">Add a user to your conversation:</label>
@@ -57,6 +61,7 @@ Conversation conversation = ConversationStore.getInstance().getConversationWithT
         </div>
 
         <button type="submit" name = "buttonVal" value = "add">Add user</button>
+        <button type="submit" name = "buttonVal" value = "addAll">Add all users</button>
         <button type="submit" name = "buttonVal" value = "chat">Go to Chat</button>
       </form>
 
@@ -79,9 +84,16 @@ Conversation conversation = ConversationStore.getInstance().getConversationWithT
       <%
         for(UUID member : members){
           String memberUsername = UserStore.getInstance().getUser(member).getName();
+          if(owner.equals(member)){
       %>
-          <li><a><%= memberUsername %></a></li>
+            <li><a><%= memberUsername %> (owner)</a></li>
       <%
+          }
+          else {
+      %>
+            <li><a><%= memberUsername %></a></li>
+      <%
+          }
         }
       %>
         </ul>

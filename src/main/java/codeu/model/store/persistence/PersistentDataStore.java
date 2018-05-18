@@ -111,7 +111,6 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         List<UUID> members = (List<UUID>)stringToUUID((String) entity.getProperty("members"));
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, members);
-        System.out.println("members" + members);
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may

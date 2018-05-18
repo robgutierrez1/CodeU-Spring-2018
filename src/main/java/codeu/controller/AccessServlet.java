@@ -166,7 +166,25 @@ public class AccessServlet extends HttpServlet {
       response.sendRedirect("/chat/" + conversationTitle);
       return;
     }
+    else if(buttonVal.equals("addAll")) {
+      List<User> users = userStore.getAllUsers();
+      for(User newUser : users) {
+        if (!(username.equals(userStore.getUsername(conversation.getOwnerId())))) {
+          System.out.println("User not owner of this conversation");
+        }
+        else if ((conversation.members).contains(userStore.getUserId(newUser))) {
+          System.out.println("User is already a member of this conversation");
+        }
+        else { 
+          UUID newMemberId = userStore.getUserId(newUser);
+          conversationStore.addMember(conversation, newMemberId); 
+    
+          response.sendRedirect("/access/" + conversationTitle);
+        }
         
+      }
+      return;
+    } 
     else {
       // default case: shouldn't reach here
       System.out.println("Something went wrong...");

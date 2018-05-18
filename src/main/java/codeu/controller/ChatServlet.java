@@ -144,12 +144,18 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
-    String messageContent = request.getParameter("message");
+    String buttonVal = request.getParameter("buttonVal");
 
-    // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    if(buttonVal == null) {
+      System.out.println("no button");
+    }
+    else if (buttonVal.equals("submitMessage")) {
+      String messageContent = request.getParameter("message");
 
-    Message message =
+      // this removes any HTML from the message content
+      String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+
+      Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
@@ -157,9 +163,13 @@ public class ChatServlet extends HttpServlet {
             cleanedMessageContent,
             Instant.now());
 
-    messageStore.addMessage(message);
+      messageStore.addMessage(message);
 
-    // redirect to a GET request
-    response.sendRedirect("/chat/" + conversationTitle);
+      // redirect to a GET request
+      response.sendRedirect("/chat/" + conversationTitle);
+    }
+    else if (buttonVal.equals("seeMembers")) {
+      response.sendRedirect("/access/" + conversationTitle);
+    }
   }
 }
