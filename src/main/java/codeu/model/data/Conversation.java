@@ -34,6 +34,7 @@ public class Conversation {
   public final Instant creation;
   public final String title;
   public final List<UUID> members;
+  public final Boolean hidden;
 
   /**
    * Constructs a new Conversation.
@@ -43,21 +44,21 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation){ 
-    //super(creation, "Conversation");
+  public Conversation(UUID id, UUID owner, String title, Instant creation, Boolean hidden){ 
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
     this.members = new ArrayList<UUID>(Arrays.asList(owner));
-    //this.creator = creator;
+    this.hidden = hidden;
   }
 
-   public Conversation(UUID id, UUID owner, String title, Instant creation, List<UUID> members){ 
+   public Conversation(UUID id, UUID owner, String title, Instant creation, List<UUID> members, Boolean hidden){ 
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    this.hidden = hidden;
     if(members == null) {
       this.members = new ArrayList<UUID>(Arrays.asList(owner));
     }
@@ -86,14 +87,15 @@ public class Conversation {
     return creation;
   }
 
-    /** Returns list of members in this Conversation*/
+  /** Returns list of members in this Conversation*/
   public List<UUID> getMembers() {
     return members;
   }
 
-  // public String getCreator() {
-  //   return creator;
-  // }
+  /** Returns hidden status of conversation Conversation*/
+  public Boolean getHidden() {
+    return hidden;
+  }
 
    /**Accepts and instant and returns a string of the formatted date */
    public String getDate(Instant time) {

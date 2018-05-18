@@ -122,13 +122,35 @@ public class ConversationServlet extends HttpServlet {
       return;
     }
 
-    Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+    String buttonVal = request.getParameter("buttonVal");
 
-    String convoTitle = conversation.getTitle();
+    if(buttonVal == null) {
+      System.out.println("no button");
+    }
+    else if(buttonVal.equals("create")) { 
+      Conversation conversation =
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), false);
+        String convoTitle = conversation.getTitle();
     
     
-    conversationStore.addConversation(conversation);
-    response.sendRedirect("/access/" + convoTitle);
+      conversationStore.addConversation(conversation);
+      response.sendRedirect("/access/" + convoTitle);
+      return;
+    }
+    else if(buttonVal.equals("hidden")) {
+      Conversation conversation =
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), true);
+      String convoTitle = conversation.getTitle();
+    
+    
+      conversationStore.addConversation(conversation);
+      response.sendRedirect("/access/" + convoTitle);
+      return;
+    }
+    else {
+      // default case: shouldn't reach here
+      System.out.println("Something went wrong...");
+    }
+    response.sendRedirect("/access/" + conversationTitle);
   }
 }

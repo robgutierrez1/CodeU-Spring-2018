@@ -121,6 +121,14 @@ public class ConversationStore {
     persistentStorageAgent.updateConversationMembers(conversation, membersInConversation);
   }
 
+  /** Add a new member to the current set of members in the conversation. */
+  public void removeMember(Conversation conversation, UUID member) {
+    conversation.members.remove(member);
+    List<UUID> membersInConversation = new ArrayList<>();
+    membersInConversation = conversation.getMembers();
+    persistentStorageAgent.updateConversationMembers(conversation, membersInConversation);
+  }
+
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
     // This approach will be pretty slow if we have many Conversations.

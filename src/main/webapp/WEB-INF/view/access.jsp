@@ -52,8 +52,8 @@ UUID owner = conversation.getOwnerId();
 
     <% if(request.getSession().getAttribute("user") != null){ %>
       <h1>Add Members</h1>
-      <p>Only the owner of the conversation can add members</p>
-      
+      <p>Only the owner of the conversation can edit members</p>
+
       <form action="/access/<%= conversation.getTitle() %>" method="POST">
           <div class="form-group">
             <label class="form-control-label">Add a user to your conversation:</label>
@@ -63,6 +63,21 @@ UUID owner = conversation.getOwnerId();
         <button type="submit" name = "buttonVal" value = "add">Add user</button>
         <button type="submit" name = "buttonVal" value = "addAll">Add all users</button>
         <button type="submit" name = "buttonVal" value = "chat">Go to Chat</button>
+      </form>
+
+      <hr/>
+    <% } %>
+
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <h1>Remove Members</h1>
+
+      <form action="/access/<%= conversation.getTitle() %>" method="POST">
+          <div class="form-group">
+            <label class="form-control-label">Remove a user from your conversation:</label>
+          <input type="text" name="userToDelete">
+        </div>
+
+        <button type="submit" name = "buttonVal" value = "delete">Remove user</button>
       </form>
 
       <hr/>

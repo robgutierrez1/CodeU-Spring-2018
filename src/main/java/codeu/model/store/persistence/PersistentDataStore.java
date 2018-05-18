@@ -110,7 +110,8 @@ public class PersistentDataStore {
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         List<UUID> members = (List<UUID>)stringToUUID((String) entity.getProperty("members"));
-        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, members);
+        Boolean hidden = Boolean.valueOf((String) entity.getProperty("hidden"));
+        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, members, hidden);
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -244,6 +245,7 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     conversationEntity.setProperty("members", uuidtoString(conversation.getMembers())); 
+    conversationEntity.setProperty("hidden", String.valueOf(conversation.getHidden())); 
     datastore.put(conversationEntity);
   }
 
