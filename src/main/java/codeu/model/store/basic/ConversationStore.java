@@ -15,15 +15,13 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
-import codeu.model.data.Activity;
+import codeu.controller.ConversationComparator;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 // Added
 import java.util.UUID;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and

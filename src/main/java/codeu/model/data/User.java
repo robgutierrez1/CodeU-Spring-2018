@@ -128,10 +128,16 @@ public class User {
   }
   
   public void setNotify(ArrayList<String> notifyList) {
+	  if (notifyList == null) {
+		  notifyList = new ArrayList<String>();
+	  }
 	  this.notifyList = notifyList;
   }
+  
   /** Returns the imageUrl of this User. */
   public String getImageUrl() {
+	if (imageUrl == null)
+		imageUrl = "";
     return imageUrl;
   }
 
@@ -139,6 +145,9 @@ public class User {
    * Sets the imageUrl of this User.
    */
   public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+	if (imageUrl == null)
+		this.imageUrl = "";
+	else
+		this.imageUrl = imageUrl;
   }
 }

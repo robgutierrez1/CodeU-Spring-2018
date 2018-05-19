@@ -18,7 +18,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.Activity;
-import codeu.model.store.persistence.PersistentDataStoreException;
+//import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -71,14 +71,17 @@ public class PersistentDataStore {
         String imageUrl = (String) entity.getProperty("imageUrl");
         System.out.println("the imageUrl when loading all users is:" + imageUrl);
         System.out.println("the user is:" + userName);
-        User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
 
         if (aboutMe == null){
           aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
         }
+        
+        if (imageUrl == null) {
+        	  imageUrl = "";
+        }
 
+        User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
         ArrayList<String> notifyList = (ArrayList<String>) entity.getProperty("notifyList");
-        User user = new User(uuid, userName, password, creationTime, aboutMe);
         user.setNotify(notifyList);
         users.add(user);
         

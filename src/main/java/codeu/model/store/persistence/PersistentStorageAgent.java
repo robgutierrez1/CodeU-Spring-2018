@@ -19,6 +19,7 @@ import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.Activity;
 import codeu.model.store.persistence.PersistentDataStore;
+import codeu.model.store.persistence.PersistentDataStoreException;
 
 import java.util.ArrayList;
 import java.util.List;
