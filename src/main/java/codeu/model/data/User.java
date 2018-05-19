@@ -29,7 +29,7 @@ public class User {
   private final String hashedPassword;
   private final Instant creation;
   private String aboutMe;
-  private ArrayList<String> notifyList;\
+  private ArrayList<String> notifyList;
   private String imageUrl;
 
   /**
@@ -140,4 +140,5 @@ public class User {
    */
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
+  }
 }
