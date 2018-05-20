@@ -21,6 +21,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;  
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 
 /** Servlet class responsible for the page to add people to a conversation. */
@@ -143,6 +144,7 @@ public class AccessServlet extends HttpServlet {
 
       if (newMember == null) {
         // couldn't find user with that username
+        //JOptionPane.showMessageDialog(Frame, "User not found");
         System.out.println("User not found: " + userToAdd);
       }
       else if (!(username.equals(userStore.getUsername(conversation.getOwnerId())))) {

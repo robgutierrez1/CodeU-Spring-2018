@@ -17,9 +17,12 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="java.util.UUID" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+String user = (String)request.getSession().getAttribute("user");
+UUID userId = UserStore.getInstance().getUserId(user);
 %>
 
 <!DOCTYPE html>
@@ -71,15 +74,18 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <hr/>
 
-    <% if (request.getSession().getAttribute("user") != null) { %>
+    <% if (request.getSession().getAttribute("user") != null) { 
+        if((conversation.members).contains(userId)) {
+    %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input type="text" name="message">
         <br/>
+
         <button type="submit" name = "buttonVal" value = "submitMessage">Send</button>
         <button type="submit" name = "buttonVal" value = "seeMembers">See Members</button>
-
+        <button type="submit" name = "buttonVal" value = "leaveChat">Leave Chat</button>
     </form>
-    <% } else { %>
+    <% } } else { %>
       <p><a href="/login">Login</a> to send a message.</p>
     <% } %>
 

@@ -18,7 +18,6 @@
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,8 +31,9 @@ String conversationTitle = (String)request.getAttribute("conversationTitle");
 String chatURL = (String)request.getAttribute("chatURL");
 Conversation conversation = ConversationStore.getInstance().getConversationWithTitle(conversationTitle);
 UUID owner = conversation.getOwnerId();
+String error = (String)request.getAttribute("accessError");
+%>  
 
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,7 +45,6 @@ UUID owner = conversation.getOwnerId();
   <%@ include file="/navbar.html" %>
 
   <div id="container">
-
     <% if(request.getAttribute("error") != null){ %>
         <h2 style="color:red"><%= request.getAttribute("error") %></h2>
     <% } %>

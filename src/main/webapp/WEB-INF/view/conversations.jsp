@@ -18,6 +18,10 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="java.util.UUID" %>
 
+<%
+String user = (String)request.getSession().getAttribute("user");
+UUID userId = UserStore.getInstance().getUserId(user);
+%>
 
 <!DOCTYPE html>
 <html>
@@ -60,15 +64,21 @@
       <p>Create a conversation to get started.</p>
     <%
     }
-    {
+      {
     %>
       <ul class="mdl-list">
     <%
-      for(Conversation conversation : conversations){
-        if(conversation.getHidden() == false){
+      for(Conversation conversation : conversations) {
+        if(conversation.getHidden() == false && (conversation.members).contains(userId)) {
     %>
-        <li><a href="/chat/<%= conversation.getTitle() %>">
-          <%= conversation.getTitle() %></a></li>
+          <li><a href="/chat/<%= conversation.getTitle() %>">
+            <%= conversation.getTitle() %> (member) </a></li>
+    <%
+        }
+        else if(conversation.getHidden() == false && !(conversation.members).contains(userId)) {
+    %>
+          <li><a href="/chat/<%= conversation.getTitle() %>">
+            <%= conversation.getTitle() %></a></li>
     <%
         }
       }
@@ -84,8 +94,6 @@
     <%
     List<Conversation> conversations1 =
       (List<Conversation>) request.getAttribute("conversations");
-    String user = (String)request.getSession().getAttribute("user");
-    UUID userId = UserStore.getInstance().getUserId(user);
     
     if(conversations1 == null || conversations1.isEmpty()){
     %>

@@ -168,6 +168,18 @@ public class ChatServlet extends HttpServlet {
       // redirect to a GET request
       response.sendRedirect("/chat/" + conversationTitle);
     }
+    else if (buttonVal.equals("leaveChat")){
+      if ((userStore.getUserId(user).equals(conversation.getOwnerId()))) {
+        System.out.println("You can't remove the owner");
+      }
+      else {
+        UUID oldMemberId = userStore.getUserId(user);
+        conversationStore.removeMember(conversation, oldMemberId); 
+    
+        response.sendRedirect("/conversations");
+        return;
+      }
+    }
     else if (buttonVal.equals("seeMembers")) {
       response.sendRedirect("/access/" + conversationTitle);
     }
