@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.UUID;
 // Added
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class User {
   private final String hashedPassword;
   private final Instant creation;
   private String aboutMe;
+  private ArrayList<String> notifyList;
   private String imageUrl;
 
   /**
@@ -46,6 +48,7 @@ public class User {
     this.name = name;
     this.hashedPassword = password;
     this.creation = creation;
+    this.notifyList = new ArrayList<String>();
     
     // added aboutMe
     this.aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
@@ -112,6 +115,16 @@ public class User {
     this.aboutMe = aboutMe;
   }
   
+  /** Returns the notification list of this User. */
+  public ArrayList<String> getNotify() {
+	// this if loop is added to ensure backwards compatibility - some users are created 
+	// with the old constructor, where the notifyList is not instantiated. Will find ways
+	// to change it after persistence storage is set up.
+	  if (notifyList == null) {
+		  notifyList = new ArrayList<String>();
+	  }
+      return notifyList;
+  }
   /** Returns the imageUrl of this User. */
   public String getImageUrl() {
     return imageUrl;
