@@ -117,12 +117,12 @@ public class User {
   
   /** Returns the notification list of this User. */
   public ArrayList<String> getNotify() {
-	// this if loop is added to ensure backwards compatibility - some users are created 
-	// with the old constructor, where the notifyList is not instantiated. Will find ways
-	// to change it after persistence storage is set up.
-	  if (notifyList == null) {
-		  notifyList = new ArrayList<String>();
-	  }
+		// this if loop is added to ensure backwards compatibility - some users are created 
+		// with the old constructor, where the notifyList is not instantiated. Will find ways
+		// to change it after persistence storage is set up.
+		if (notifyList == null) {
+	  	notifyList = new ArrayList<String>();
+  	}
     return notifyList;
   }
   
@@ -135,8 +135,8 @@ public class User {
   
   /** Returns the imageUrl of this User. */
   public String getImageUrl() {
-	if (imageUrl == null)
-		imageUrl = "";
+		if (imageUrl == null)
+			imageUrl = "";
     return imageUrl;
   }
 
@@ -144,9 +144,9 @@ public class User {
    * Sets the imageUrl of this User.
    */
   public void setImageUrl(String imageUrl) {
-	if (imageUrl == null)
-		this.imageUrl = "";
-	else
-		this.imageUrl = imageUrl;
+		if (imageUrl == null)
+			this.imageUrl = "";
+		else
+			this.imageUrl = imageUrl;
   }
 }
