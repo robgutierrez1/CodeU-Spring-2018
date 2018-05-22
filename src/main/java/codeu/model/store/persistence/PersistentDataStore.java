@@ -111,7 +111,9 @@ public class PersistentDataStore {
         UUID ownerUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
+        List<UUID> members = (List<UUID>)stringToUUID((String) entity.getProperty("members"));
+        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, members);
+        System.out.println("members" + members);
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -247,7 +249,22 @@ public class PersistentDataStore {
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
+    conversationEntity.setProperty("members", uuidtoString(conversation.getMembers())); 
     datastore.put(conversationEntity);
+  }
+
+  /** Update a Conversation members list to the Datastore service.*/
+  public void updateConversationMembers(Conversation conversation, List<UUID> members) {
+    Query query = new Query("chat-conversations");
+    PreparedQuery results = datastore.prepare(query);
+      
+    for (Entity entity : results.asIterable()) {
+      UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+      if(uuid.equals(conversation.getId())) {
+        entity.setProperty("members", uuidtoString(members));
+        datastore.put(entity);
+      }
+    }
   }
 
   /** Write a Conversation object to the Datastore service. */
@@ -299,5 +316,31 @@ public class PersistentDataStore {
     ArrayList<String> result = new ArrayList<String>();
     result = new ArrayList<String>(Arrays.asList(users.split(",")));
     return result;
+  }
+
+  /** Converts list of UUIDs to string of UUIDs **/
+  public String uuidtoString(List<UUID> members) {
+    List<String> memberStrings = new ArrayList<>();
+    for(UUID member : members) {
+      memberStrings.add(member.toString());
+    }
+    String result = String.join(",", memberStrings);
+    return result;
+  }
+
+  /** Conversts string of UUIDs to list */
+  public List<UUID> stringToUUID(String members) {
+    System.out.println("member string: " + members);
+    if(members == null){
+      ArrayList<UUID> result = new ArrayList<UUID>();
+      return result;
+    }
+    ArrayList<String> stringResult = new ArrayList<String>();
+    stringResult = new ArrayList<String>(Arrays.asList(members.split(",")));
+    ArrayList<UUID> result = new ArrayList<UUID>();
+    for(String id : stringResult) {;
+      result.add(UUID.fromString(id));
+    }
+    return result; 
   }
 }

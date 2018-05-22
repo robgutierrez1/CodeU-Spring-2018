@@ -101,6 +101,7 @@ public class ChatServlet extends HttpServlet {
 
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
+    request.setAttribute("viewer", userStore.getUser((String) request.getSession().getAttribute("user")));
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
   }
 
@@ -113,6 +114,9 @@ public class ChatServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+    String requestUrl = request.getRequestURI();
+    String conversationTitle = requestUrl.substring("/chat/".length());
+    Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
 
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
@@ -128,10 +132,13 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
-    String requestUrl = request.getRequestURI();
-    String conversationTitle = requestUrl.substring("/chat/".length());
+    if (!(conversation.members).contains(userStore.getUserId(username))) {
+      // user not in conversation
+      System.out.println("User not a member of this conversation");
+      response.sendRedirect("/conversations");
+      return;
+    }
 
-    Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
     if (conversation == null) {
       // couldn't find conversation, redirect to conversation list
       response.sendRedirect("/conversations");
@@ -142,6 +149,19 @@ public class ChatServlet extends HttpServlet {
 
     // this removes any HTML from the message content
     String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    
+    // check whether the new message contain usernames that requires notification
+    String[] breakdown = cleanedMessageContent.split("@");
+    if (breakdown != null && breakdown.length > 1){
+    		for (int i = 1; i < breakdown.length; i++){
+            String[] atItem = breakdown[i].split(" ", 2);
+            User notifiee = userStore.getUser(atItem[0]);
+            if (notifiee != null){
+            		// will be changed into something meaningful in the future
+            		notifiee.getNotify().add("New message!!"); 
+            }
+    		}
+    }
 
     Message message =
         new Message(

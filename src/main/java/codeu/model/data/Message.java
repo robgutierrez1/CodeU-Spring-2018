@@ -82,6 +82,7 @@ public class Message {
     String formatted = DateTimeFormatter.ofPattern("E MMM d hh:mm:ss yyyy").format(datetime);
     return formatted;
   }
+
   public boolean getOpenToPublic() {
 	  return openToPublic;
   }
