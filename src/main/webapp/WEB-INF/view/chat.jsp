@@ -41,6 +41,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       background-color: orange; 
       display: inline;
     }
+
     #red {
       color: mediumvioletred;
     }
@@ -70,9 +71,6 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
             String message = viewer.getNotify().get(i);
             %><div id = red><%= message %><button id="inline-button" type="submit" name = "buttonVal<%=i%>" value = "hide">Hide</button></div><%
          }
-       } else{
-       %><p>No notifications yet... </p><%                            
-       }
        
     %>
     </form>
@@ -118,8 +116,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
           <%
                 }
             }
-                                             
-                                             %>
+          %>
         </li>
     <%
         } else{%>

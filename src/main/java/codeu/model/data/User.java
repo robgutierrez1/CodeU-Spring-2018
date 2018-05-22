@@ -116,14 +116,13 @@ public class User {
   }
   
   /** Returns the notification list of this User. */
-  // Note: Will be later changed into ArrayList of Mention Objects
   public ArrayList<String> getNotify() {
 	// this if loop is added to ensure backwards compatibility - some users are created 
 	// with the old constructor, where the notifyList is not instantiated. Will find ways
 	// to change it after persistence storage is set up.
-	if (notifyList == null) {
-		notifyList = new ArrayList<String>();
-	}
+	  if (notifyList == null) {
+		  notifyList = new ArrayList<String>();
+	  }
     return notifyList;
   }
   

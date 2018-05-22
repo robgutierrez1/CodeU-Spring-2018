@@ -100,6 +100,47 @@ public class UserStore {
     return null;
   }
 
+  /**
+   * Access the user UUID object with the given username.
+   *
+   * @return null if the UUID does not match any existing User.
+   */
+  public UUID getUserId(String username) {
+    for (User user : users) {
+      if (user.getName().equals(username)) {
+        return user.getId();
+      }
+    }
+    return null;
+  }
+
+   public UUID getUserId(User u) {
+    for (User user : users) {
+      if (user.equals(u)) {
+        return user.getId();
+      }
+    }
+    return null;
+  }
+
+  public String getUsername(UUID id) {
+    for (User user : users) {
+      if (user.getId().equals(id)) {
+        return user.getName();
+      }
+    }
+    return null;
+  }
+
+  public String getUsername(User u) {
+    for (User user : users) {
+      if (user.equals(u)) {
+        return user.getName();
+      }
+    }
+    return null;
+  }
+
   /** Add a new user to the current set of users known to the application. */
   public void addUser(User user) {
     users.add(user);

@@ -101,8 +101,22 @@ public class ConversationStore {
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
-    //ActivityStore.activities.add(conversation);
     persistentStorageAgent.writeThrough(conversation);
+  }
+
+  /** Access the current set of members within the given Conversation. */
+  public List<UUID> getMembersInConversation(Conversation conversation) {
+    List<UUID> membersInConversation = new ArrayList<>();
+    membersInConversation = conversation.getMembers();
+    return membersInConversation;
+  }
+
+  /** Add a new member to the current set of members in the conversation. */
+  public void addMember(Conversation conversation, UUID member) {
+    conversation.members.add(member);
+    List<UUID> membersInConversation = new ArrayList<>();
+    membersInConversation = conversation.getMembers();
+    persistentStorageAgent.updateConversationMembers(conversation, membersInConversation);
   }
 
   /** Check whether a Conversation title is already known to the application. */
