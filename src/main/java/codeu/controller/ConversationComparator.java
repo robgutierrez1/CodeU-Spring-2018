@@ -1,4 +1,4 @@
-package codeu.model.store.basic;
+package codeu.controller;
 
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;

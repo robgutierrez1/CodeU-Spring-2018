@@ -1,5 +1,3 @@
-package codeu.controller;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +13,7 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
-public class Serve extends HttpServlet {
+public class messageServe extends HttpServlet {
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	
     @Override

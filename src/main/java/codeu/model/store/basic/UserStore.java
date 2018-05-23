@@ -16,12 +16,11 @@ package codeu.model.store.basic;
 
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.controller.UserComparator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -151,6 +150,11 @@ public class UserStore {
   /** Update aboutme for a user*/
   public void updateAboutMe(User user, String aboutMe) {
     persistentStorageAgent.updateAboutMe(user, aboutMe);
+  }
+  
+  /** Update notifyList for a user*/
+  public void updateNotifyList(User user, ArrayList<String> notfiyList) {
+    persistentStorageAgent.updateNotifyList(user, notfiyList);
   }
   
   /** Add a new user to the current set of users known to the application.*/

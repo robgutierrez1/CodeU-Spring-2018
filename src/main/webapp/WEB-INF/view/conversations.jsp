@@ -15,6 +15,7 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="java.util.UUID" %>
 <%@ page import="codeu.model.data.User" %>
@@ -33,6 +34,14 @@ UUID userId = UserStore.getInstance().getUserId(user);
 <head>
   <title>Conversations</title>
   <link rel="stylesheet" href="/css/main.css">
+    
+  <style>
+    #red {
+      color: mediumvioletred;
+      display: inline-block;
+    }
+  </style>
+    
 </head>
 <body>
 
@@ -59,6 +68,17 @@ UUID userId = UserStore.getInstance().getUserId(user);
       <hr/>
     <% } %>
 
+    <%
+       if (viewer != null && viewer.getNotify() != null && !viewer.getNotify().isEmpty()){
+         for (String message : viewer.getNotify()){
+            %><div id = red><%= message %></div><%
+         }
+       } else{
+       %><p>No notifications yet... </p><%                            
+       }
+       
+    %>
+    
     <h1>Conversations</h1>
 
     <%
