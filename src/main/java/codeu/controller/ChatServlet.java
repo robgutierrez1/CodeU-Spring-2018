@@ -161,14 +161,20 @@ public class ChatServlet extends HttpServlet {
     		}
     }
 
-    String messageContent = request.getParameter("message");
+    String buttonVal = request.getParameter("buttonVal");
 
-    // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    if(buttonVal == null) {
+      System.out.println("no button");
+    }
+    else if (buttonVal.equals("submitMessage")) {
+      String messageContent = request.getParameter("message");
+
+      // this removes any HTML from the message content
+      String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
     
-    // check whether the new message contain usernames that requires notification
-    String[] breakdown = cleanedMessageContent.split("@");
-    if (breakdown != null && breakdown.length > 1){
+      // check whether the new message contain usernames that requires notification
+      String[] breakdown = cleanedMessageContent.split("@");
+      if (breakdown != null && breakdown.length > 1){
     		for (int i = 1; i < breakdown.length; i++){
             String[] atItem = breakdown[i].split(" ", 2);
             User notifiee = userStore.getUser(atItem[0]);
@@ -179,10 +185,10 @@ public class ChatServlet extends HttpServlet {
             		userStore.updateNotifyList(notifiee, notifiee.getNotify());
 
             }
-    		}
-    }
+    		 }
+       }
 
-    Message message =
+      Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
@@ -191,9 +197,25 @@ public class ChatServlet extends HttpServlet {
             Instant.now(),
             "text");
 
-    messageStore.addMessage(message);
+      messageStore.addMessage(message);
+
+      // redirect to a GET request
+      response.sendRedirect("/chat/" + conversationTitle);
+    }
+    else if (buttonVal.equals("leaveChat")){
+      if ((userStore.getUserId(user).equals(conversation.getOwnerId()))) {
+        System.out.println("You can't remove the owner");
+      }
+      else {
+        UUID oldMemberId = userStore.getUserId(user);
+        conversationStore.removeMember(conversation, oldMemberId); 
     
-    // redirect to a GET request
-    response.sendRedirect("/chat/" + conversationTitle);
+        response.sendRedirect("/conversations");
+        return;
+      }
+    }
+    else if (buttonVal.equals("seeMembers")) {
+      response.sendRedirect("/access/" + conversationTitle);
+    }
   }
 }

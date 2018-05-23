@@ -18,7 +18,6 @@
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +30,10 @@
 String conversationTitle = (String)request.getAttribute("conversationTitle");
 String chatURL = (String)request.getAttribute("chatURL");
 Conversation conversation = ConversationStore.getInstance().getConversationWithTitle(conversationTitle);
-%>
+Conversation convo1 = (Conversation)request.getAttribute("conversation");
+UUID owner = convo1.getOwnerId();
+%>  
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,13 +45,14 @@ Conversation conversation = ConversationStore.getInstance().getConversationWithT
   <%@ include file="/navbar.html" %>
 
   <div id="container">
-
     <% if(request.getAttribute("error") != null){ %>
         <h2 style="color:red"><%= request.getAttribute("error") %></h2>
     <% } %>
 
     <% if(request.getSession().getAttribute("user") != null){ %>
       <h1>Add Members</h1>
+      <p>Only the owner of the conversation can edit members</p>
+
       <form action="/access/<%= conversation.getTitle() %>" method="POST">
           <div class="form-group">
             <label class="form-control-label">Add a user to your conversation:</label>
@@ -57,7 +60,23 @@ Conversation conversation = ConversationStore.getInstance().getConversationWithT
         </div>
 
         <button type="submit" name = "buttonVal" value = "add">Add user</button>
+        <button type="submit" name = "buttonVal" value = "addAll">Add all users</button>
         <button type="submit" name = "buttonVal" value = "chat">Go to Chat</button>
+      </form>
+
+      <hr/>
+    <% } %>
+
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <h1>Remove Members</h1>
+
+      <form action="/access/<%= conversation.getTitle() %>" method="POST">
+          <div class="form-group">
+            <label class="form-control-label">Remove a user from your conversation:</label>
+          <input type="text" name="userToDelete">
+        </div>
+
+        <button type="submit" name = "buttonVal" value = "delete">Remove user</button>
       </form>
 
       <hr/>
@@ -79,9 +98,16 @@ Conversation conversation = ConversationStore.getInstance().getConversationWithT
       <%
         for(UUID member : members){
           String memberUsername = UserStore.getInstance().getUser(member).getName();
+          if(owner.equals(member)){
       %>
-          <li><a><%= memberUsername %></a></li>
+            <li><a><%= memberUsername %> (owner)</a></li>
       <%
+          }
+          else {
+      %>
+            <li><a><%= memberUsername %></a></li>
+      <%
+          }
         }
       %>
         </ul>

@@ -15,11 +15,19 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="java.util.UUID" %>
 <%@ page import="codeu.model.data.User" %>
+
 <%
 User viewer = (User) request.getAttribute("viewer");
 %>
 
+<%
+String user = (String)request.getSession().getAttribute("user");
+UUID userId = UserStore.getInstance().getUserId(user);
+%>
 
 <!DOCTYPE html>
 <html>
@@ -53,7 +61,8 @@ User viewer = (User) request.getAttribute("viewer");
           <input type="text" name="conversationTitle">
         </div>
 
-        <button type="submit">Create</button>
+        <button type="submit" name="buttonVal" value="create">Create</button>
+        <button type="submit" name="buttonVal" value="hidden">Create Hidden Message</button>
       </form>
 
       <hr/>
@@ -80,15 +89,55 @@ User viewer = (User) request.getAttribute("viewer");
       <p>Create a conversation to get started.</p>
     <%
     }
+      {
+    %>
+      <ul class="mdl-list">
+    <%
+      for(Conversation conversation : conversations) {
+        if(conversation.getHidden() == false && (conversation.members).contains(userId)) {
+    %>
+          <li><a href="/chat/<%= conversation.getTitle() %>">
+            <%= conversation.getTitle() %> (member) </a></li>
+    <%
+        }
+        else if(conversation.getHidden() == false && !(conversation.members).contains(userId)) {
+    %>
+          <li><a href="/chat/<%= conversation.getTitle() %>">
+            <%= conversation.getTitle() %></a></li>
+    <%
+        }
+      }
+    %>
+      </ul>
+    <%
+    }
+    %>
+
+    <h1>Hidden Conversations</h1>
+    <p>Only you and members of the conversation can see these</p>
+
+    <%
+    List<Conversation> conversations1 =
+      (List<Conversation>) request.getAttribute("conversations");
+    
+    if(conversations1 == null || conversations1.isEmpty()){
+    %>
+      <p>Create a conversation to get started.</p>
+    <%
+    }
     else{
     %>
       <ul class="mdl-list">
     <%
-      for(Conversation conversation : conversations){
+      for(Conversation conversation1 : conversations1){
+        if(conversation1.getHidden() == true){
+          if((conversation1.members).contains(userId)) {
     %>
-      <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a></li>
+          <li><a href="/chat/<%= conversation1.getTitle() %>">
+            <%= conversation1.getTitle() %></a></li>
     <%
+          }
+        }
       }
     %>
       </ul>
