@@ -147,6 +147,19 @@ public class ChatServlet extends HttpServlet {
       response.sendRedirect("/conversations");
       return;
     }
+    
+    // deal with user hiding mentioning messages
+    for (int i = 0; i < user.getNotify().size(); i++) {
+    		String buttonVal = request.getParameter("buttonVal" + i);
+    		
+    		if (buttonVal != null && buttonVal.equals("hide")) {
+    			user.getNotify().remove(i);
+    			userStore.updateNotifyList(user, user.getNotify());
+    			// leave after we done removing notifications (or messageContent will be null)
+    			response.sendRedirect("/chat/" + conversationTitle);
+    			return;
+    		}
+    }
 
     String messageContent = request.getParameter("message");
 
@@ -161,7 +174,10 @@ public class ChatServlet extends HttpServlet {
             User notifiee = userStore.getUser(atItem[0]);
             if (notifiee != null){
             		// will be changed into something meaningful in the future
-            		notifiee.getNotify().add("New message!!"); 
+
+            		notifiee.getNotify().add("You are mentioned by \"" + user.getName() + "\" in chatroom: " + conversation.getTitle());
+            		userStore.updateNotifyList(notifiee, notifiee.getNotify());
+
             }
     		}
     }
@@ -176,7 +192,7 @@ public class ChatServlet extends HttpServlet {
             "text");
 
     messageStore.addMessage(message);
-
+    
     // redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
   }

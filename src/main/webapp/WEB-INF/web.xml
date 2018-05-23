@@ -108,7 +108,7 @@
 
   <servlet>
     <servlet-name>Serve</servlet-name>
-    <servlet-class>Serve</servlet-class>
+    <servlet-class>codeu.controller.Serve</servlet-class>
   </servlet>
  
   <servlet-mapping>
@@ -118,7 +118,7 @@
   
   <servlet>
     <servlet-name>Upload</servlet-name>
-    <servlet-class>Upload</servlet-class>
+    <servlet-class>codeu.controller.Upload</servlet-class>
   </servlet>
 
   <servlet-mapping>

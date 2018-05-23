@@ -18,7 +18,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.Activity;
-import codeu.model.store.persistence.PersistentDataStoreException;
+//import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -72,12 +72,20 @@ public class PersistentDataStore {
         String imageUrl = (String) entity.getProperty("imageUrl");
         System.out.println("the imageUrl when loading all users is:" + imageUrl);
         System.out.println("the user is:" + userName);
-        User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
 
         if (aboutMe == null){
           aboutMe = "AboutMe not set. If you're the owner of the page, you should see an edit button below.";
         }
+        
+        if (imageUrl == null) {
+        	  imageUrl = "";
+        }
+
+        User user = new User(uuid, userName, password, creationTime, aboutMe, imageUrl);
+        ArrayList<String> notifyList = (ArrayList<String>) entity.getProperty("notifyList");
+        user.setNotify(notifyList);
         users.add(user);
+        
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
         // occur include network errors, Datastore service errors, authorization errors,
@@ -196,6 +204,7 @@ public class PersistentDataStore {
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
     userEntity.setProperty("aboutme", user.getAboutMe().toString());
+    userEntity.setProperty("notifyList", user.getNotify());
     datastore.put(userEntity);
   }
     
@@ -208,6 +217,20 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         if (uuid.equals(user.getId())) {
           entity.setProperty("aboutme", aboutMe);
+          datastore.put(entity);
+        }
+    }
+  }
+  
+  /** Update a User object's notifyList to the Datastore service.*/
+  public void updateNotifyList(User user, ArrayList<String> notifyList) {
+    Query query = new Query("chat-users");
+    PreparedQuery results = datastore.prepare(query);
+      
+    for (Entity entity : results.asIterable()) {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        if (uuid.equals(user.getId())) {
+          entity.setProperty("notifyList", notifyList);
           datastore.put(entity);
         }
     }

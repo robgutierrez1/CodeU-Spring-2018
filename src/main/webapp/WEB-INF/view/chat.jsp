@@ -44,6 +44,13 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
       background-color: orange; 
       display: inline;
     }
+
+    #red {
+      color: mediumvioletred;
+    }
+    #inline-button {
+      display: inline-block;  
+    }
   </style>
 
   <script>
@@ -60,14 +67,16 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
 
   <div id="container">
       
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
     <%
        if (viewer != null && viewer.getNotify() != null && !viewer.getNotify().isEmpty()){
-       %><p>You got a notification! </p><%
-       } else{
-       %><p>No notifications yet... </p><%                            
-       }
+         for (int i = 0; i < viewer.getNotify().size(); i++){
+            String message = viewer.getNotify().get(i);
+            %><div id = red><%= message %><button id="inline-button" type="submit" name = "buttonVal<%=i%>" value = "hide">Hide</button></div><%
+         }
        
     %>
+    </form>
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
@@ -115,16 +124,16 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
           if (texters.contains(atItem[0])) {
     %> 
           <span id="orange">@<%= atItem[0] %></span>
-      <%  } else { %>
-            @<%= atItem[0] %>  
-      <%  }   
-          if (atItem.length >= 2) { 
-      %>
-            <%= atItem[1] %>
-      <%
-          }
-        }                                   
-      %>
+            <% }
+               else{ %>
+                    @<%= atItem[0] %>  
+            <% }   
+               if (atItem.length >= 2){ %>
+                    <%= atItem[1] %>
+          <%
+                }
+            }
+          %>
         </li>
         <%
           } else { %>
