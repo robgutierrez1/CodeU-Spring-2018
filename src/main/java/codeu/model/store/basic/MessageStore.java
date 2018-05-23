@@ -15,13 +15,12 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+import codeu.controller.MessageComparator;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -102,6 +101,8 @@ public class MessageStore {
       }
     }
 
+	Collections.sort(messagesInConversation, new MessageComparator());
+	
     return messagesInConversation;
   }
 

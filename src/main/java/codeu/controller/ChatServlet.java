@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -101,6 +104,7 @@ public class ChatServlet extends HttpServlet {
 
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
+    request.setAttribute("viewer", userStore.getUser((String) request.getSession().getAttribute("user")));
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
   }
 
@@ -143,11 +147,40 @@ public class ChatServlet extends HttpServlet {
       response.sendRedirect("/conversations");
       return;
     }
+    
+    // deal with user hiding mentioning messages
+    for (int i = 0; i < user.getNotify().size(); i++) {
+    		String buttonVal = request.getParameter("buttonVal" + i);
+    		
+    		if (buttonVal != null && buttonVal.equals("hide")) {
+    			user.getNotify().remove(i);
+    			userStore.updateNotifyList(user, user.getNotify());
+    			// leave after we done removing notifications (or messageContent will be null)
+    			response.sendRedirect("/chat/" + conversationTitle);
+    			return;
+    		}
+    }
 
     String messageContent = request.getParameter("message");
 
     // this removes any HTML from the message content
     String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    
+    // check whether the new message contain usernames that requires notification
+    String[] breakdown = cleanedMessageContent.split("@");
+    if (breakdown != null && breakdown.length > 1){
+    		for (int i = 1; i < breakdown.length; i++){
+            String[] atItem = breakdown[i].split(" ", 2);
+            User notifiee = userStore.getUser(atItem[0]);
+            if (notifiee != null){
+            		// will be changed into something meaningful in the future
+
+            		notifiee.getNotify().add("You are mentioned by \"" + user.getName() + "\" in chatroom: " + conversation.getTitle());
+            		userStore.updateNotifyList(notifiee, notifiee.getNotify());
+
+            }
+    		}
+    }
 
     Message message =
         new Message(
@@ -155,10 +188,11 @@ public class ChatServlet extends HttpServlet {
             conversation.getId(),
             user.getId(),
             cleanedMessageContent,
-            Instant.now());
+            Instant.now(),
+            "text");
 
     messageStore.addMessage(message);
-
+    
     // redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
   }

@@ -19,6 +19,9 @@ import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.Activity;
 import codeu.model.store.persistence.PersistentDataStore;
+import codeu.model.store.persistence.PersistentDataStoreException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -109,6 +112,11 @@ public class PersistentStorageAgent {
   /** Update a User object's aboutMe to the Datastore service.*/
   public void updateAboutMe(User user, String aboutMe) {
     persistentDataStore.updateAboutMe(user, aboutMe);
+  }
+  
+  /** Update a User object's notifyList to the Datastore service.*/
+  public void updateNotifyList(User user, ArrayList<String> notifyList) {
+    persistentDataStore.updateNotifyList(user, notifyList);
   }
   
   /** Update a User object's imageUrl to the Datastore service.*/
