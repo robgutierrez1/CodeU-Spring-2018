@@ -101,6 +101,8 @@ public class MessageStore {
       }
     }
 
+	Collections.sort(messagesInConversation, new MessageComparator());
+	
     return messagesInConversation;
   }
 

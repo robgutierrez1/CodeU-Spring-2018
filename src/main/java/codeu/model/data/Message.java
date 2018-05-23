@@ -30,6 +30,7 @@ public class Message {
   private final UUID author;
   private final String content;
   private final Instant creation;
+  private String type;
   private boolean openToPublic;
 
   /**
@@ -40,6 +41,26 @@ public class Message {
    * @param author the ID of the User who sent this Message
    * @param content the text content of this Message
    * @param creation the creation time of this Message
+   * @param type the type of this Message ("text" or "image")
+   */
+  public Message(UUID id, UUID conversation, UUID author, String content, Instant creation, String type) {
+    this.id = id;
+    this.conversation = conversation;
+    this.author = author;
+    this.content = content;
+    this.creation = creation;
+    this.type = type;
+  }
+  
+  /**
+   * Constructs a new Message.
+   *
+   * @param id the ID of this Message
+   * @param conversation the ID of the Conversation this Message belongs to
+   * @param author the ID of the User who sent this Message
+   * @param content the text content of this Message
+   * @param creation the creation time of this Message
+   * @param type the type of this Message ("text" or "image")
    */
   public Message(UUID id, UUID conversation, UUID author, String content, Instant creation) {
     //super(creation, "Message");
@@ -48,6 +69,7 @@ public class Message {
     this.author = author;
     this.content = content;
     this.creation = creation;
+    this.type = "default";
     openToPublic = true;
   }
 
@@ -66,7 +88,7 @@ public class Message {
     return author;
   }
 
-  /** Returns the text content of this Message. */
+  /** Returns the content (text or url for image) of this Message. */
   public String getContent() {
     return content;
   }
@@ -75,7 +97,12 @@ public class Message {
   public Instant getCreationTime() {
     return creation;
   }
-
+  
+  /** Returns the type of this Message. */
+  public String getType() {
+    return type;
+  }
+  
   /** Accepts and instant and returns a string of the formatted date */
   public String getDate(Instant time) {
     LocalDateTime datetime = LocalDateTime.ofInstant(time, ZoneId.systemDefault());
@@ -86,6 +113,7 @@ public class Message {
   public boolean getOpenToPublic() {
 	  return openToPublic;
   }
+  
   public void setOpenToPublic(boolean openToPublic) {
 	  this.openToPublic = openToPublic;
   }

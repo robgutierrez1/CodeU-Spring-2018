@@ -19,10 +19,13 @@
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%
 User viewer = (User) request.getAttribute("viewer");
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
 
 <!DOCTYPE html>
@@ -96,16 +99,30 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+        if (message.getType() == null) {
     %>
-      <li><strong><%= author %>:</strong> <%
+      		<!-- nothing -->
+    <%
+      	} else if (message.getType().equals("image")) {
+    %>
+    		<li><strong><%= author %>:</strong> 
+    		<img src="<%= message.getContent() %>" alt="profile image" width=50% height=50%> </li>
+    <%  
+        } else if (message.getType().equals("text")) { 
+    %>
+        <li><strong><%= author %>:</strong> 
+    
+    <%
         String rendered = message.getContent();                 
         String[] breakdown = rendered.split("@");
         if (breakdown != null && breakdown.length > 1){
-         %><%= breakdown[0] %>
-        <% for (int i = 1; i < breakdown.length; i++){
-            String[] atItem = breakdown[i].split(" ", 2);
-            if (texters.contains(atItem[0])){
-            %> 
+    %>
+        <%= breakdown[0] %>
+    <% 
+        for (int i = 1; i < breakdown.length; i++) {
+          String[] atItem = breakdown[i].split(" ", 2);
+          if (texters.contains(atItem[0])) {
+    %> 
           <span id="orange">@<%= atItem[0] %></span>
             <% }
                else{ %>
@@ -118,12 +135,15 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
             }
           %>
         </li>
-    <%
-        } else{%>
+        <%
+          } else { %>
             <%= rendered %>
-       <%}
+        <% } 
+        } else if (message.getType().equals("default")) {
+
+        }
       }
-    %>
+    %><!-- nothing -->
       </ul>
     </div>
 
@@ -134,6 +154,11 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
         <input type="text" name="message">
         <br/>
         <button type="submit">Send</button>
+    </form>
+    <form action="<%= blobstoreService.createUploadUrl("/messageUpload") %>" method="post" enctype="multipart/form-data">
+      		<input type="hidden" name="conversationTitle" value="<%= conversation.getTitle() %>">
+      		<input type="file" name="myFile">
+        	<input type="submit" value="Submit">
     </form>
     <% } else { %>
       <p><a href="/login">Login</a> to send a message.</p>

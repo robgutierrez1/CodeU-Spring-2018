@@ -48,7 +48,7 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
 
       <h1><%= user.getName() %>'s Profile Page</h1>
       
-      <% if (user.getImageUrl() != null) { %>
+      <% if (user.getImageUrl() != null && (!user.getImageUrl().equals(""))) { %>
       	 <img src="<%= user.getImageUrl() %>" alt="profile image" width="500" height="377"> 
       <% } else { %>
       	 <p>Profile picture not set.</p>
@@ -91,11 +91,34 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
       style="overflow: auto; height: 300px; background-color: white;">
 
       <ul style="margin: 10px;">
+      
       <% int i = 0; 
          for (Message message: userMessages) { 
             if (message.getOpenToPublic()){%>
-                
-                    <li><b><%= message.getCreationTime()%></b> : <%= message.getContent() %>
+            
+                    <%
+                    if (message.getType() == null){
+    				%>
+      					<!-- nothing -->
+    				<%
+      				} else if (message.getType().equals("image")) {
+    				%>
+    					<li><b><%= message.getCreationTime()%></b> :  
+    					<img src="<%= message.getContent() %>" alt="profile image" width=50% height=50%> </li>
+    		
+    				<%  
+        			} else if (message.getType().equals("text")){ 
+    				%>
+    					<li><b><%= message.getCreationTime()%></b> : 
+    					</strong> <%= message.getContent() %></li>
+    				<%  
+        			} else if (message.getType().equals("default")){ 
+    				%>
+    					<!-- nothing -->
+    				<%
+    				}
+                   	%>
+                   	 
                 <% if (user.equals(viewer)) { %>
                         <form action="/user/<%= user.getName() %>" method="POST">
                         <button type="submit" name = "buttonVal" value = "hide<%=i%>">Hide</button>
@@ -106,9 +129,7 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
                         <form action="/user/<%= user.getName() %>" method="POST">
                         <li><button type="submit" name = "buttonVal" value = "show<%=i%>">show the hidden message</button></li>
                 <% }
-            }
-           
-           
+           }
            i++;
                 
         }%>
