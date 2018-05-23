@@ -145,6 +145,9 @@ public class AccessServlet extends HttpServlet {
       if (newMember == null) {
         // couldn't find user with that username
         //JOptionPane.showMessageDialog(Frame, "User not found");
+        //String str = "User not found";
+        //request.setAttribute("accessError", str);
+        request.getRequestDispatcher("/WEB-INF/view/access.jsp").forward(request, response);
         System.out.println("User not found: " + userToAdd);
       }
       else if (!(username.equals(userStore.getUsername(conversation.getOwnerId())))) {

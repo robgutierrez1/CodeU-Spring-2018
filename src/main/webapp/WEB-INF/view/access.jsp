@@ -30,8 +30,8 @@
 String conversationTitle = (String)request.getAttribute("conversationTitle");
 String chatURL = (String)request.getAttribute("chatURL");
 Conversation conversation = ConversationStore.getInstance().getConversationWithTitle(conversationTitle);
-UUID owner = conversation.getOwnerId();
-String error = (String)request.getAttribute("accessError");
+Conversation convo1 = (Conversation)request.getAttribute("conversation");
+UUID owner = convo1.getOwnerId();
 %>  
 
 <!DOCTYPE html>
