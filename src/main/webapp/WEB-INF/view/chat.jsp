@@ -19,12 +19,16 @@
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="java.util.UUID" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
+
 <%
 User viewer = (User) request.getAttribute("viewer");
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+String user = (String)request.getSession().getAttribute("user");
+UUID userId = UserStore.getInstance().getUserId(user);
 BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
 
@@ -149,19 +153,24 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
 
     <hr/>
 
-    <% if (request.getSession().getAttribute("user") != null) { %>
+    <% if (request.getSession().getAttribute("user") != null) { 
+        if((conversation.members).contains(userId)) {
+    %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input type="text" name="message">
         <br/>
-        <button type="submit">Send</button>
+
+        <button type="submit" name = "buttonVal" value = "submitMessage">Send</button>
+        <button type="submit" name = "buttonVal" value = "seeMembers">See Members</button>
+        <button type="submit" name = "buttonVal" value = "leaveChat">Leave Chat</button>
     </form>
+    <% } } else { %>
     <form action="<%= blobstoreService.createUploadUrl("/messageUpload") %>" method="post" enctype="multipart/form-data">
       		<input type="hidden" name="conversationTitle" value="<%= conversation.getTitle() %>">
       		<input type="file" name="myFile">
         	<input type="submit" value="Submit">
     </form>
-    <% } else { %>
-      <p><a href="/login">Login</a> to send a message.</p>
+    <p><a href="/login">Login</a> to send a message.</p>
     <% } %>
 
     <hr/>

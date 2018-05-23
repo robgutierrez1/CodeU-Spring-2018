@@ -21,6 +21,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;  
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 
 /** Servlet class responsible for the page to add people to a conversation. */
@@ -143,6 +144,10 @@ public class AccessServlet extends HttpServlet {
 
       if (newMember == null) {
         // couldn't find user with that username
+        //JOptionPane.showMessageDialog(Frame, "User not found");
+        //String str = "User not found";
+        //request.setAttribute("accessError", str);
+        request.getRequestDispatcher("/WEB-INF/view/access.jsp").forward(request, response);
         System.out.println("User not found: " + userToAdd);
       }
       else if (!(username.equals(userStore.getUsername(conversation.getOwnerId())))) {
@@ -166,7 +171,52 @@ public class AccessServlet extends HttpServlet {
       response.sendRedirect("/chat/" + conversationTitle);
       return;
     }
-        
+    else if(buttonVal.equals("addAll")) {
+      List<User> users = userStore.getAllUsers();
+      for(User newUser : users) {
+        if (!(username.equals(userStore.getUsername(conversation.getOwnerId())))) {
+          System.out.println("User not owner of this conversation");
+        }
+        else if ((conversation.members).contains(userStore.getUserId(newUser))) {
+          System.out.println("User is already a member of this conversation");
+        }
+        else { 
+          UUID newMemberId = userStore.getUserId(newUser);
+          conversationStore.addMember(conversation, newMemberId); 
+    
+          response.sendRedirect("/access/" + conversationTitle);
+        } 
+      }
+      return;
+    }
+    else if(buttonVal.equals("delete")) { 
+          
+      String userToDelete = request.getParameter("userToDelete");
+      User oldMember = userStore.getUser(userToDelete);
+
+      if (oldMember == null) {
+        // couldn't find user with that username
+        System.out.println("User not found: " + userToDelete);
+      }
+      else if (!(username.equals(userStore.getUsername(conversation.getOwnerId())))) {
+        System.out.println("User not owner of this conversation");
+        System.out.println("owner of conversation is " + userStore.getUsername(conversation.getOwnerId()));
+        System.out.println("User is " + username);
+      }
+      else if (!(conversation.members).contains(userStore.getUserId(userToDelete))) {
+        System.out.println("User is not a member of this conversation");
+      }
+      else if ((userStore.getUserId(userToDelete).equals(conversation.getOwnerId()))) {
+        System.out.println("You can't remove the owner");
+      }
+      else {
+        UUID oldMemberId = userStore.getUserId(userToDelete);
+        conversationStore.removeMember(conversation, oldMemberId); 
+    
+        response.sendRedirect("/access/" + conversationTitle);
+        return;
+      }         
+    } 
     else {
       // default case: shouldn't reach here
       System.out.println("Something went wrong...");
