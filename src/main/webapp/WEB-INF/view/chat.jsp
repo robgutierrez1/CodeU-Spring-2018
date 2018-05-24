@@ -160,12 +160,12 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
         <button type="submit" name = "buttonVal" value = "seeMembers">See Members</button>
         <button type="submit" name = "buttonVal" value = "leaveChat">Leave Chat</button>
     </form>
-    <% } } else { %>
     <form action="<%= blobstoreService.createUploadUrl("/messageUpload") %>" method="post" enctype="multipart/form-data">
-      		<input type="hidden" name="conversationTitle" value="<%= conversation.getTitle() %>">
-      		<input type="file" name="myFile">
-        	<input type="submit" value="Submit">
+          <input type="hidden" name="conversationTitle" value="<%= conversation.getTitle() %>">
+          <input type="file" name="myFile">
+          <input type="submit" value="Submit">
     </form>
+    <% } } else { %>
     <p><a href="/login">Login</a> to send a message.</p>
     <% } %>
 
