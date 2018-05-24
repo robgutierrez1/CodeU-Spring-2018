@@ -109,12 +109,12 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
     <%
       	} else if (message.getType().equals("image")) {
     %>
-    		<li><strong><%= author %>:</strong> 
+        <li><strong><a href="/user/<%= author %>"><%= author %></a>:</strong> 
     		<img src="<%= message.getContent() %>" alt="profile image" width=50% height=50%> </li>
     <%  
         } else if (message.getType().equals("text")) { 
     %>
-            <li><strong><%= author %>:</strong> 
+            <li><strong><a href="/user/<%= author %>"><%= author %></a>:</strong> 
 
         <%
             String rendered = message.getContent();                 
