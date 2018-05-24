@@ -78,7 +78,7 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
             String message = viewer.getNotify().get(i);
             %><div id = red><%= message %><button id="inline-button" type="submit" name = "buttonVal<%=i%>" value = "hide">Hide</button></div><%
          }
-       
+       }
     %>
     </form>
 
@@ -114,40 +114,36 @@ BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(
     <%  
         } else if (message.getType().equals("text")) { 
     %>
-        <li><strong><%= author %>:</strong> 
-    
-    <%
-        String rendered = message.getContent();                 
-        String[] breakdown = rendered.split("@");
-        if (breakdown != null && breakdown.length > 1){
-    %>
-        <%= breakdown[0] %>
-    <% 
-        for (int i = 1; i < breakdown.length; i++) {
-          String[] atItem = breakdown[i].split(" ", 2);
-          if (texters.contains(atItem[0])) {
-    %> 
-          <span id="orange">@<%= atItem[0] %></span>
-            <% }
-               else{ %>
-                    @<%= atItem[0] %>  
-            <% }   
-               if (atItem.length >= 2){ %>
-                    <%= atItem[1] %>
-          <%
-                }
-            }
-          %>
-        </li>
-        <%
-          } else { %>
-            <%= rendered %>
-        <% } 
-        } else if (message.getType().equals("default")) {
+            <li><strong><%= author %>:</strong> 
 
-        }
-      }
-    %><!-- nothing -->
+        <%
+            String rendered = message.getContent();                 
+            String[] breakdown = rendered.split("@");
+            if (breakdown != null && breakdown.length > 1){
+            %>
+                <%= breakdown[0] %>
+            <% 
+                for (int i = 1; i < breakdown.length; i++) {
+                  String[] atItem = breakdown[i].split(" ", 2);
+                  if (texters.contains(atItem[0])) {
+            %> 
+                    <span id="orange">@<%= atItem[0] %></span>
+               <% } else{ %>
+                         @<%= atItem[0] %>  
+                <% }   
+                    if (atItem.length >= 2){ %>
+                         <%= atItem[1] %>
+                    <% } 
+                } // end of for loop
+                  %>
+                </li>
+                <%
+            } else { %>
+                <%= rendered %>
+        <% }
+        } // else if text
+    } // big for loop
+            %><!-- nothing -->
       </ul>
     </div>
 
