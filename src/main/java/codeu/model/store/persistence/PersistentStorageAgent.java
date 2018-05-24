@@ -143,4 +143,14 @@ public class PersistentStorageAgent {
   public void writeThrough(Activity activity) {
     persistentDataStore.writeThrough(activity);
   }
+  
+  /** Update the request list for the other user */
+  public void updateRequests(User other_user, ArrayList<String> requests) {
+    persistentDataStore.updateRequests(other_user, requests);
+  }
+
+  /** Update the friends list for this user */
+  public void updateFriends(User this_user, ArrayList<String> friends) {
+    persistentDataStore.updateFriends(this_user, friends);
+  }
 }
