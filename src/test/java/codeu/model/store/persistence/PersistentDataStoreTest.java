@@ -47,7 +47,6 @@ public class PersistentDataStoreTest {
     String nameTwo = "test_username_two";
     Instant creationTwo = Instant.ofEpochMilli(2000);
     User inputUserTwo = new User(idTwo, nameTwo, "password", creationTwo);
-
     // save
     persistentDataStore.writeThrough(inputUserOne);
     persistentDataStore.writeThrough(inputUserTwo);

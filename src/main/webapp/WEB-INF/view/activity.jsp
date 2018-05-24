@@ -12,16 +12,7 @@
 
 <!-- Get the necessary data that is going to be displayed on activity feed -->
 <%
-List<Conversation> conversations = (List<Conversation>) request.getAttribute("conversations");
-List<User> users = (List<User>) request.getAttribute("users");
-List<Message> messages = (List<Message>) request.getAttribute("messages");
 List<Activity> activities = (List<Activity>) request.getAttribute("activities");
-%>
-
-<%
-ArrayList<Conversation> conversationsArray = new ArrayList<Conversation>();
-ArrayList<User> usersArray = new ArrayList<User>();
-ArrayList<Message> messagesArray = new ArrayList<Message>();
 %>
 
 <!DOCTYPE html>
@@ -36,16 +27,16 @@ ArrayList<Message> messagesArray = new ArrayList<Message>();
           height: 500px;
           overflow-y: scroll
         }
-      </style>
+  </style>
     
-      <script>
-        // scroll the chat div to the bottom
-        function activityChat() {
-          var activityDiv = document.getElementById('activity');
-          activityDiv.scrollTop = activityDiv.scrollHeight;
-        };
-      </script>
-    </head>
+    <script>
+      // scroll the chat div to the bottom
+      function activityChat() {
+        var activityDiv = document.getElementById('activity');
+        activityDiv.scrollTop = activityDiv.scrollHeight;
+      };
+    </script>
+</head>
     <body onload="activityChat()">
 
   <%@ include file="/navbar.html" %>

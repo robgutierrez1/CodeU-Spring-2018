@@ -181,7 +181,7 @@ public class ChatServlet extends HttpServlet {
             if (notifiee != null){
             		// will be changed into something meaningful in the future
 
-            		notifiee.getNotify().add("You are mentioned by \"" + user.getName() + "\" in chatroom: " + conversation.getTitle());
+            		notifiee.getNotify().add("You were mentioned by \"" + user.getName() + "\" in chatroom: " + conversation.getTitle());
             		userStore.updateNotifyList(notifiee, notifiee.getNotify());
 
             }
