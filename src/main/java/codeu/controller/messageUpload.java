@@ -67,6 +67,10 @@ public class messageUpload extends HttpServlet {
     	this.userStore = userStore;
   	}
    
+    /**
+   	 * Loads the url for the image from blob store. 
+   	 * Creates a message with the url as content and type image.
+   	 */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {

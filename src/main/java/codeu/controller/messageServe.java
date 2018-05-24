@@ -16,6 +16,10 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 public class messageServe extends HttpServlet {
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	
+	/**
+   	 * Gets the username and blob key from the request and then serve the blob key and the
+   	 * response in blob store.
+   	 */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
