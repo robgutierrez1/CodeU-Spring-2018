@@ -5,14 +5,14 @@
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
      <a href="/about.jsp">About</a>
      <a href="/activity">Activity Feed</a> 
+     <a href="/friend">Friends</a>
      <a href="/logout">Logout</a>
    <% } else{ %>
      <a href="/login">Login</a>
      <a href="/register">Register</a>
      <a href="/about.jsp">About</a>
      <a href="/activity">Activity Feed</a> 
+     <a href="/friend">Friends</a>
    <% } %>
-   <a href="/about.jsp">About</a>
-   <a href="/activity">Activity Feed</a>
-   <a href="/friend">Friends</a>
+   
  </nav>
