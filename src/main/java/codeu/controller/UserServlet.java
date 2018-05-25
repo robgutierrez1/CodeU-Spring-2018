@@ -108,6 +108,22 @@ public class UserServlet extends HttpServlet {
        }
        return userConversations;
    }
+   
+   /**
+   * Gets the list messages of a particular user
+   */
+   List getUserMessages(User user) {
+       UUID userId = user.getId();
+       List<Message> allMessages = messageStore.getAllMessages();
+       List<Message> userMessages = new ArrayList<Message>();   
+       for (Message message: allMessages) {
+           UUID messageAuthorId = message.getAuthorId();
+           if (messageAuthorId.equals(userId)) {
+               userMessages.add(message);
+           }
+       }
+       return userMessages;
+   }
     
   /**
    * This function fires when a user navigates to the user page. It checks whether the username
@@ -134,12 +150,7 @@ public class UserServlet extends HttpServlet {
 	request.setAttribute("editAboutMe", editAboutMe);
     request.setAttribute("aboutMe", aboutMe);
 	
-	List<Conversation> userConversations = getUserConversations(user);
-	userMessages = new ArrayList<Message>();
-	for (Conversation conversation: userConversations) {
-	    List<Message> messages = messageStore.getMessagesInConversation(conversation.getId());
-	    userMessages.addAll(messages);
-	}
+	userMessages = getUserMessages(user);
 	
 	// added to sort userMessages
 	Collections.sort(userMessages, new Comparator<Message>() {
