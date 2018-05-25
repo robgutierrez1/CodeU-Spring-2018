@@ -41,6 +41,7 @@
         
         <!-- Friend Field -->
         <% if (request.getSession().getAttribute("user") != null) { %>
+        <h3>Add a friend!</h3>
         <form action="/friend" method="POST">
             <label for="username">Username: </label>
             <input type="text" name="username" id="username">
@@ -48,6 +49,7 @@
             <button type="submit" name="add">Add Friend</button>
         </form>
 
+        <h3>Accept a friend request!</h3>
         <form action="/friend" method="POST">
             <label for="request_accept">Accept Friend Request: </label>
             <input type="text" name="request_accept" id="request_accept">
@@ -55,11 +57,20 @@
             <button type="submit" name="accept">Accept</button>
         </form>
 
+        <h3>Decline a friend request!</h3>
         <form action="/friend" method="POST">
             <label for="request_decline">Decline Friend Request: </label>
             <input type="text" name="request_decline" id="request_decline">
             <br/>
             <button type="submit" name="decline">Decline</button>
+        </form>
+
+        <h3>Unfriend somebody!</h3>
+        <form action="/friend" method="POST">
+            <label for="friend_remove">Username: </label>
+            <input type="text" name="friend_remove" id="friend_remove">
+            <br/>
+            <button type="submit" name="remove">Unfriend</button>
         </form>
 
         <div id="friend">
@@ -69,7 +80,8 @@
                         for(String user: friends) {
                             User me = UserStore.getInstance().getUser(user);
                 %>
-                        <li><strong><%= user %> is your friend!</strong></li>
+                        <li><strong><a href="/user/<%= user %>"><%= user %></a> is your friend!</strong></li>
+                        
                 <%
                         }
                     }
@@ -86,7 +98,7 @@
                             User user = UserStore.getInstance().getUser(username);
                         
                 %>
-                    <li><strong><%= username %> has sent you a friend request!</strong></li>
+                    <li><strong><a href="/user/<%= username %>"><%= username %></a> wants to be your friend!</strong></li>
                 <%
                         }
                     }
